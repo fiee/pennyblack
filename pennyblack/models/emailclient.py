@@ -28,7 +28,7 @@ class EmailClient(models.Model):
     referer = models.CharField(
         verbose_name=_('Referer'),
         max_length=1023, blank=True)
-    ip_address = models.IPAddressField(
+    ip_address = models.GenericIPAddressField(
         verbose_name=_('IP address'))
     visited = models.DateTimeField(
         verbose_name=_('Visited'),
