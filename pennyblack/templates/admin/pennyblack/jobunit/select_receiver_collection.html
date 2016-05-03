@@ -11,7 +11,7 @@
 {% endblock %}
 
 {% block content %}
-<h1>Select Receiver Collection</h1>
+<h1>{% trans "Select Receiver Collection" %}</h1>
 <form action="{{ form_url }}" method="post" id="{{ opts.module_name }}_form">{% csrf_token %}
 <div>
 {% if errors %}

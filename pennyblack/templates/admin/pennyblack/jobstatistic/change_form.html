@@ -38,8 +38,8 @@
     <h2>{% trans "link statistics"|capfirst %}</h2>
     <table border="0">
         <tr>
-            <th>Target</th>
-            <th>Clicks</th>
+            <th>{% trans "Target" %}</th>
+            <th>{% trans "Clicks" %}</th>
         </tr>
         {% for link in original.links.all %}
             <tr>

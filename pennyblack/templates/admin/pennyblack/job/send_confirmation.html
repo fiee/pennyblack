@@ -25,7 +25,7 @@
     </iframe>
         <form action="{% url "admin:pennyblack_job_send" object.id %}" method="post" id="pennyblack_newsletter_form">{% csrf_token %}
         <div class="submit-row">
-            <input type="submit" value="Save and send" class="default" name="_send" />
+            <input type="submit" value="{% trans "Save and send" %}" class="default" name="_send" />
         </div>
     </form>    
 {% endblock %}
