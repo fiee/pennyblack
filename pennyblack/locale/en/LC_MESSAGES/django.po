@@ -7,17 +7,21 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pennyblack EN\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-03 17:17+0600\n"
-"PO-Revision-Date: 2016-05-03 17:34+0600\n"
+"POT-Creation-Date: 2016-05-03 18:03+0600\n"
+"PO-Revision-Date: 2016-05-03 18:05+0600\n"
+"Last-Translator: Henning Hraban Ramm <hraban@fiee.net>\n"
+"Language-Team: \n"
 "Language: en\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-"Last-Translator: Henning Hraban Ramm <hraban@fiee.net>\n"
-"Language-Team: \n"
 "X-Generator: Poedit 1.8.7\n"
 "X-Poedit-SourceCharset: UTF-8\n"
+
+#: __init__.py:7 __init__.py:8
+msgid "Pennyblack"
+msgstr "Pennyblack Newsletter"
 
 #: content/richtext.py:57
 msgid "Title"
@@ -374,6 +378,14 @@ msgstr ""
 
 #: models/sender.py:60
 msgid "senders"
+msgstr ""
+
+#: module/subscriber/__init__.py:5
+msgid "Pennyblack Subscriber"
+msgstr ""
+
+#: module/subscriber/__init__.py:6
+msgid "Pennyblack Subscribers"
 msgstr ""
 
 #: module/subscriber/models.py:55
