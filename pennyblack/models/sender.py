@@ -13,7 +13,7 @@ if settings.BOUNCE_DETECTION_ENABLE:
     from Mailman.Bouncers.BouncerAPI import ScanText
 try:
     import spf
-    ENABLE_SPF = True
+    ENABLE_SPF = settings.ENABLE_SPF
 except IOError:
     # spf fails to load on a system which is offline because of missing resolv.conf
     ENABLE_SPF = False
