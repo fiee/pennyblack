@@ -2,8 +2,21 @@
 pennyblack
 ==========
 
-Penyblack is a newsletter module based on the feincms.org_ CMS building toolkit. E-mails can either be sent as mass mails (e.g. monthly newsletter) or as part of a customised workflow (e.g. user clicks on a link and in response to that your application sends out an e-mail).  Conditional data and variables can be filled in to a newsletter using the django template language.
-SPF (sender validation) and bounce management can be activated if desired. Key data like bounce rate, opening rate and link clicks is tracked and presented in the admin menu. Sending bulk e-mails is easy on memory. 20’000 and more addresses wont crash your server. From the outset we developed Pennyblack to easily integrate into existing web projects.
+Pennyblack is a newsletter module based on the feincms.org_ CMS building
+toolkit. E-mails can either be sent as mass mails (e.g. monthly newsletter) or
+as part of a customised workflow (e.g. user clicks on a link and in response to
+that your application sends out an e-mail).  Conditional data and variables can
+be filled in to a newsletter using the django template language.
+
+SPF (sender validation) and bounce management can be activated if desired.
+Key data like bounce rate, opening rate and link clicks is tracked and presented
+in the admin menu. Sending bulk e-mails is easy on memory. 20’000 and more
+addresses wont crash your server. From the outset we developed Pennyblack to
+easily integrate into existing web projects.
+
+This is the fork by fiëé visuëlle, intended to work with latest Django (1.9)
+and FeinCMS (1.11+). Based on the Django 1.7 branch of nickburlett’s fork.
+
 
 Installation
 ------------
@@ -15,9 +28,10 @@ and complete.
 
 2. Install Pennyblack over `pip`::
 
-    pip install pennyblack
+    pip install git+https://github.com/fiee/pennyblack.git
 
-3. Make sure that the FeinCMS and Pennyblack Apps are added to your installed apps in your `settings.py`::
+3. Make sure that the FeinCMS and Pennyblack Apps are added to your installed
+   apps in your `settings.py`::
 
     'feincms',
     'feincms.module.medialibrary',
@@ -51,18 +65,10 @@ and complete.
     Newsletter.create_content_type(TextOnlyNewsletterContent)
     Newsletter.create_content_type(TextWithImageNewsletterContent)
         
-7. Add Pennyblack Models to south migration modules in your `settings.py`::
+7. Migrate::
 
-    SOUTH_MIGRATION_MODULES = {
-        'pennyblack': 'project_name.migrations_pennyblack',
-        'subscriber': 'project_name.migrations_subscriber',
-    }
-        
-8. Run `schemamigrations` and `migrate`::
-
-    ./manage.py schemamigration --initial pennyblack
-    ./manage.py schemamigration --initial subscriber
-    ./manage.py migrate
+    ./manage.py makemigrations pennyblack subscriber
+    ./manage.py migrate pennyblack subscriber
     
 
 Dependencies
@@ -71,16 +77,17 @@ Dependencies
 *   Python
 
     *   django
-    *   feincms
+    *   feincms incl. medialibrary
     *   pyspf
     *   pydns
-    *   pil
+    *   pil(low)
+    
 *   Project Settings
 
     *   TEMPLATE_CONTEXT_PROCESSORS
     
-        *   django.core.context_processors.request
+        *   `django.core.context_processors.request`
     *   FEINCMS_ADMIN_MEDIA
-    *   feincms medialibrary musst be installed
     
+
 .. _feincms.org: http://feincms.org
