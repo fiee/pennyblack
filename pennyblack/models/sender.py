@@ -47,7 +47,7 @@ class Sender(models.Model):
         max_length=100, blank=True)
     imap_port = models.IntegerField(
         verbose_name=_("imap port"),
-        max_length=100, default=143)
+        default=143)
     imap_ssl = models.BooleanField(
         verbose_name=_("use ssl"),
         default=False)
