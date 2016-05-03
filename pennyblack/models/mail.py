@@ -26,9 +26,11 @@ except ImportError:
 from datetime import timedelta
 
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Mail
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+
 class MailManager(models.Manager):
     use_for_related_fields = True
 
@@ -40,15 +42,30 @@ class Mail(models.Model):
     """
     This is a single Mail, it's part of a Job
     """
-    viewed = models.DateTimeField(default=None, null=True)
-    bounced = models.BooleanField(default=False)
-    sent = models.BooleanField(default=False)
-    content_type = models.ForeignKey('contenttypes.ContentType')
-    object_id = models.PositiveIntegerField()
+    viewed = models.DateTimeField(
+        verbose_name=_('Viewed'),
+        default=None, null=True)
+    bounced = models.BooleanField(
+        verbose_name=_('Bounced'),
+        default=False)
+    sent = models.BooleanField(
+        verbose_name=_('Sent'),
+        default=False)
+    content_type = models.ForeignKey(
+        'contenttypes.ContentType',
+        verbose_name=_('Content type'))
+    object_id = models.PositiveIntegerField(
+        verbose_name=_('Object ID'))
     person = GenericForeignKey('content_type', 'object_id')
-    job = models.ForeignKey('pennyblack.Job', related_name="mails")
-    mail_hash = models.CharField(max_length=32, blank=True)
-    email = models.EmailField()  # the address is stored when the mail is sent
+    job = models.ForeignKey(
+        'pennyblack.Job',
+        verbose_name=_('Job'),
+        related_name="mails")
+    mail_hash = models.CharField(
+        verbose_name=_('Mail hash'),
+        max_length=32, blank=True)
+    email = models.EmailField(
+        verbose_name=_('Email'), )  # the address is stored when the mail is sent
 
     objects = MailManager()
 
@@ -103,7 +120,8 @@ class Mail(models.Model):
         person object and on the group object.
         """
         self.mark_viewed(request, contact_type='link')
-        if hasattr(self.person, 'on_landing') and hasattr(self.person.on_landing, '__call__'):
+        if hasattr(self.person, 'on_landing') \
+        and hasattr(self.person.on_landing, '__call__'):
             self.person.on_landing(request)
         if self.job.content_type is not None and \
                 hasattr(self.job.group_object, 'on_landing') and \
@@ -153,7 +171,9 @@ class Mail(models.Model):
         if job.newsletter.newsletter_type == settings.NEWSLETTER_TYPE_MASSMAIL:
             headers.update({'Precedence': 'bulk'})
         try:
-            headers.update({'List-Unsubscribe': "<%s>" % self.person.get_unsubscribe_url(mail=self, job=job, newsletter=job.newsletter)})
+            headers.update({'List-Unsubscribe': "<%s>" % \
+                self.person.get_unsubscribe_url(
+                    mail=self, job=job, newsletter=job.newsletter)})
         except NotImplementedError:
             pass
         message = mail.EmailMessage(
@@ -202,14 +222,18 @@ class Mail(models.Model):
         """
         Gets the header url for this email.
         """
-        return self.job.newsletter.header_url_replaced.replace('{{mail.mail_hash}}', self.mail_hash).replace('{{base_url}}', self.job.newsletter.get_base_url())
+        return self.job.newsletter.header_url_replaced.replace(
+            '{{mail.mail_hash}}', self.mail_hash).replace(
+            '{{base_url}}', self.job.newsletter.get_base_url())
 
     @property
     def admin_change_url(self):
         if hasattr(self, '_admin_change_url'):
             return self._admin_change_url
         try:
-            self._admin_change_url = reverse('admin:%s_%s_change' % (self.content_type.app_label, self.content_type.model), args=[self.object_id])
+            self._admin_change_url = reverse('admin:%s_%s_change' % \
+                (self.content_type.app_label, self.content_type.model),
+                args=[self.object_id])
         except NoReverseMatch:
             return None
         return self._admin_change_url

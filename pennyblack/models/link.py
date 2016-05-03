@@ -14,9 +14,11 @@ except ImportError:
     now = datetime.now
 
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Link
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+
 def is_link(link_original, link_replaced):
     """
     Checks if link_replaced resolves to link_original
@@ -57,11 +59,21 @@ class Link(models.Model):
     If there is a identifier set, then the link belongs to a view which is presented
     to the receiver via the proxy view. These links don't have a link_target.
     """
-    job = models.ForeignKey('pennyblack.Job', related_name='links')
-    identifier = models.CharField(max_length=100, default='')
-    link_hash = models.CharField(max_length=32, verbose_name=_("link hash"), unique=True, blank=True)
-    link_target = models.CharField(verbose_name=_("address"), max_length=500, default='')
-    token = models.CharField(max_length=32, null=True)
+    job = models.ForeignKey('pennyblack.Job',
+        verbose_name=_('Job'),
+        related_name='links')
+    identifier = models.CharField(
+        verbose_name=_('Identifier'),
+        max_length=100, default='')
+    link_hash = models.CharField(
+        verbose_name=_('Link hash'),
+        max_length=32,
+        unique=True, blank=True)
+    link_target = models.CharField(
+        verbose_name=_("Address"), max_length=500, default='')
+    token = models.CharField(
+        verbose_name=_('Token'),
+        max_length=32, null=True)
 
     class Meta:
         verbose_name = _('link')
@@ -106,8 +118,12 @@ class LinkClick(models.Model):
     """
     Stores a click on a link.
     """
-    link = models.ForeignKey('pennyblack.Link', related_name='clicks')
-    mail = models.ForeignKey('pennyblack.Mail', related_name='clicks')
+    link = models.ForeignKey('pennyblack.Link',
+        verbose_name=_('Link'),
+        related_name='clicks')
+    mail = models.ForeignKey('pennyblack.Mail',
+        verbose_name=_('Mail message'),
+        related_name='clicks')
     date = models.DateTimeField(default=now)
 
     class Meta:

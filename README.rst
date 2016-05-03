@@ -21,8 +21,7 @@ and FeinCMS (1.11+). Based on the Django 1.7 branch of nickburlett’s fork.
 Installation
 ------------
 
-**Notice**: This is a first draft of an installation guide. It's not finished
-and complete.
+**Notice**: This installation guide is not complete.
 
 1. Make sure you have a working django project setup.
 
@@ -40,7 +39,7 @@ and complete.
 
 4. Add a newsletter url to your `urls.py`::
 
-    url(r'^newsletter/', include('pennyblack.urls'), name = 'pennyblack'),
+    url(r'^newsletter/', include('pennyblack.urls'), name='pennyblack'),
     
 5. Install dependencies (over `pip`):
 
@@ -50,8 +49,8 @@ and complete.
 6. Import Pennyblack and add a newsletter template to your `models.py`::
 
     from pennyblack.models.newsletter import Newsletter
-    from pennyblack.content.richtext import TextOnlyNewsletterContent, \
-       TextWithImageNewsletterContent
+    from pennyblack.content.richtext import (TextOnlyNewsletterContent,
+                                             TextWithImageNewsletterContent)
    
     Newsletter.register_templates({
       'key': 'example',

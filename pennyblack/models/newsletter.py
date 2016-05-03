@@ -1,6 +1,6 @@
 # coding=utf-8
 import mimetypes
-import os
+# import os
 
 from django.conf.urls import patterns, url
 from django.core.exceptions import ImproperlyConfigured
@@ -8,7 +8,7 @@ from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.contrib import admin
 from django.contrib.contenttypes.models import ContentType
 from django.db import models
-from django.db.models import signals
+# from django.db.models import signals
 from django import forms
 from django.utils import translation
 from django.utils.translation import ugettext_lazy as _
@@ -20,9 +20,11 @@ from feincms.utils import copy_model_instance
 from pennyblack import settings
 
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Newsletter
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+
 class NewsletterManager(models.Manager):
     def active(self):
         """
@@ -34,13 +36,15 @@ class NewsletterManager(models.Manager):
         """
         Filters all newsletter avaiable for massmailing
         """
-        return self.active().filter(newsletter_type__in=settings.NEWSLETTER_TYPE_MASSMAIL)
+        return self.active().filter(
+            newsletter_type__in=settings.NEWSLETTER_TYPE_MASSMAIL)
 
     def workflow(self):
         """
         Filters all newsletter avaiable in a workflow eg. signupmail
         """
-        return self.active().filter(newsletter_type__in=settings.NEWSLETTER_TYPE_WORKFLOW)
+        return self.active().filter(
+            newsletter_type__in=settings.NEWSLETTER_TYPE_WORKFLOW)
 
     def get_workflow_newsletter_by_name(self, name):
         """
@@ -50,11 +54,13 @@ class NewsletterManager(models.Manager):
         to get any newsletter with the given name before giving up.
         """
         try:
-            return self.workflow().get(name__iexact=name, language=translation.get_language())
+            return self.workflow().get(
+                name__iexact=name, language=translation.get_language())
         except models.ObjectDoesNotExist:
             pass
         try:
-            return self.workflow().get(name__iexact=name, language=settings.LANGUAGE_CODE)
+            return self.workflow().get(
+                name__iexact=name, language=settings.LANGUAGE_CODE)
         except models.ObjectDoesNotExist:
             pass
         try:
@@ -68,21 +74,48 @@ class Newsletter(Base):
     A newsletter with subject and content
     can contain multiple jobs with mails to send
     """
-    name = models.CharField(verbose_name=_("name"), help_text=_("Is only to describe the newsletter."), max_length=100)
-    active = models.BooleanField(default=True)
-    newsletter_type = models.IntegerField(choices=settings.NEWSLETTER_TYPE, verbose_name=_("Type"),
-                                          help_text=_("Can only be changed during creation."))
-    sender = models.ForeignKey('pennyblack.Sender', verbose_name=_("sender"))
-    subject = models.CharField(verbose_name=_("subject"), max_length=250)
-    reply_email = models.EmailField(verbose_name=_("reply-to"), blank=True)
-    language = models.CharField(max_length=6, verbose_name=_("language"), choices=settings.LANGUAGES)
-    header_image = models.ForeignKey('medialibrary.MediaFile', verbose_name=_("header image"))
-    header_url = models.URLField()
-    header_url_replaced = models.CharField(max_length=250, default='')
-    site = models.ForeignKey('sites.Site', verbose_name=_("site"))
-    #ga tracking
-    utm_source = models.SlugField(verbose_name=_("utm Source"), default="newsletter")
-    utm_medium = models.SlugField(verbose_name=_("utm Medium"), default="cpc")
+    name = models.CharField(
+        verbose_name=_("Name"),
+        help_text=_("Is only to describe the newsletter."),
+        max_length=100)
+    active = models.BooleanField(
+        verbose_name=_('Active'),
+        default=True)
+    newsletter_type = models.IntegerField(
+        choices=settings.NEWSLETTER_TYPE,
+        verbose_name=_("Type"),
+        help_text=_("Can only be changed during creation."))
+    sender = models.ForeignKey(
+        'pennyblack.Sender',
+        verbose_name=_("sender"))
+    subject = models.CharField(
+        verbose_name=_("subject"),
+        max_length=250)
+    reply_email = models.EmailField(
+        verbose_name=_("reply-to"),
+        blank=True)
+    language = models.CharField(
+        max_length=6,
+        verbose_name=_("language"),
+        choices=settings.LANGUAGES)
+    header_image = models.ForeignKey(
+        'medialibrary.MediaFile',
+        verbose_name=_("header image"))
+    header_url = models.URLField(
+        verbose_name=_('Header URL'))
+    header_url_replaced = models.CharField(
+        verbose_name=_('Replaced Header URL'),
+        max_length=250, default='')
+    site = models.ForeignKey(
+        'sites.Site',
+        verbose_name=_("site"))
+    # ga tracking
+    utm_source = models.SlugField(
+        verbose_name=_("utm Source"),
+        default="newsletter")
+    utm_medium = models.SlugField(
+        verbose_name=_("utm Medium"),
+        default="cpc")
 
     objects = NewsletterManager()
 
@@ -97,8 +130,8 @@ class Newsletter(Base):
 
     def is_valid(self):
         """
-        Checks if the newsletter is valid. A newsletter needs to have a
-        subject to be valid.
+        Checks if the newsletter is valid.
+        A newsletter must have a subject to be valid.
         """
         if self.subject == '':
             return False
@@ -114,7 +147,8 @@ class Newsletter(Base):
         snapshot.save()
         snapshot.copy_content_from(self)
         for attachment in self.attachments.all():
-            attachment_copy = copy_model_instance(attachment, exclude=('id', 'newsletter'))
+            attachment_copy = copy_model_instance(
+                attachment, exclude=('id', 'newsletter'))
             attachment_copy.newsletter = snapshot
             attachment_copy.save()
         return snapshot
@@ -124,9 +158,9 @@ class Newsletter(Base):
 
     def replace_links(self, job):
         """
-        Searches al links in content sections and replaces them with a link to
+        Searches all links in content sections and replaces them with a link to
         the link tracking view.
-        It also generates the header_url_replaced which is the same but for
+        It also generates the `header_url_replaced` which is the same but for
         the header url.
         """
         from pennyblack.models.link import is_link
@@ -231,10 +265,20 @@ class Newsletter(Base):
 
 
 class Attachment(models.Model):
-    newsletter = models.ForeignKey(Newsletter, related_name='attachments')
-    file = models.FileField(upload_to='newsletter/attachments', verbose_name=_(u'File'))
-    name = models.CharField(max_length=100, verbose_name=_(u'Filename'), blank=True)
-    mimetype = models.CharField(max_length=20, blank=True)
+    newsletter = models.ForeignKey(Newsletter,
+        verbose_name=_('Newsletter'),
+        related_name='attachments')
+    file = models.FileField(
+        upload_to='newsletter/attachments',
+        verbose_name=_('File'))
+    name = models.CharField(
+        max_length=100,
+        verbose_name=_('Filename'),
+        blank=True)
+    mimetype = models.CharField(
+        verbose_name=_('MIME type'),
+        max_length=20,
+        blank=True)
     size = models.PositiveIntegerField(default=0)
 
     def __unicode__(self):
@@ -255,9 +299,9 @@ class AttachmentAdminForm(forms.ModelForm):
 
     def save(self, **kwargs):
         filename = self.instance.name
-        mimetype, format = mimetypes.guess_type(filename)
+        mimetype, fmt = mimetypes.guess_type(filename)
         if not mimetype:
-            raise forms.ValidationError(_(u'Mimetype of file could not be guessed.'))
+            raise forms.ValidationError(_('Mimetype of file could not be guessed.'))
         self.instance.mimetype = mimetype
         self.instance.size = self.instance.file.size
         return super(AttachmentAdminForm, self).save(**kwargs)

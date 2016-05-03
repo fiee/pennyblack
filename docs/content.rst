@@ -7,7 +7,8 @@ Additional hooks
 ****************
 
 - replace_links
-    This method if it exists is called before the newsletter is sent. It should replace all links with a newly generated link to be able to track every link click:
+    This method if it exists is called before the newsletter is sent.
+    It should replace all links with a newly generated link to be able to track every link click:
     ::
     
         HREF_RE = re.compile(r'href\="((\{\{[^}]+\}\}|[^"><])+)"')
@@ -30,7 +31,8 @@ Additional hooks
         
  
 - prepare_to_send
-    Is meant to add some additional style informations into the content. Because email clients often only accept inline style information.
+    Is meant to add some additional style information into the content.
+    Because email clients often only accept inline style information.
     ::
     
         def prepare_to_send(self):
@@ -42,6 +44,7 @@ Additional hooks
 
 Provided content types
 ======================
+
 Pennyblack comes with some content types bundled which sould be sufficient for most use cases.
 
 .. currentmodule:: pennyblack.content.richtext

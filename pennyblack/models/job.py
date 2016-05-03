@@ -1,4 +1,4 @@
-from django.conf.urls import patterns, url
+# from django.conf.urls import patterns, url
 try:
     from django.contrib.contenttypes.fields import GenericForeignKey
 except ImportError:
@@ -21,28 +21,55 @@ else:
     now = timezone.now
 
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Job
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+
 class Job(models.Model):
     """A bunch of participants which receive a newsletter"""
-    newsletter = models.ForeignKey('pennyblack.Newsletter', related_name="jobs", null=True)
-    status = models.IntegerField(choices=settings.JOB_STATUS, default=1)
-    date_created = models.DateTimeField(verbose_name=_("created"), default=now)
-    date_deliver_start = models.DateTimeField(blank=True, null=True, verbose_name=_("started delivering"), default=None)
-    date_deliver_finished = models.DateTimeField(blank=True, null=True, verbose_name=_("finished delivering"), default=None)
+    newsletter = models.ForeignKey(
+        'pennyblack.Newsletter',
+        verbose_name=_('Newsletter'),
+        related_name="jobs", null=True)
+    status = models.IntegerField(
+        verbose_name=_('Status'),
+        choices=settings.JOB_STATUS,
+        default=1)
+    date_created = models.DateTimeField(
+        verbose_name=_("Created"),
+        default=now)
+    date_deliver_start = models.DateTimeField(
+        blank=True, null=True,
+        verbose_name=_("started delivering"),
+        default=None)
+    date_deliver_finished = models.DateTimeField(
+        blank=True, null=True,
+        verbose_name=_("finished delivering"),
+        default=None)
 
-    content_type = models.ForeignKey('contenttypes.ContentType', null=True, blank=True)
-    object_id = models.PositiveIntegerField(null=True, blank=True)
+    content_type = models.ForeignKey(
+        'contenttypes.ContentType',
+        verbose_name=_('Content Type'),
+        null=True, blank=True)
+    object_id = models.PositiveIntegerField(
+        verbose_name=_('Object ID'),
+        null=True, blank=True)
     group_object = GenericForeignKey('content_type', 'object_id')
-    collection = models.TextField(blank=True)
+    collection = models.TextField(
+        verbose_name=_('Collection'),
+        blank=True)
 
-    #ga tracking
-    utm_campaign = models.SlugField(verbose_name=_("utm campaign"), blank=True)
+    # ga tracking
+    utm_campaign = models.SlugField(
+        verbose_name=_("utm campaign"),
+        blank=True)
 
-    public_slug = models.SlugField(verbose_name=_("slug"), unique=True, 
-            help_text=_("Unique slug to allow public access to the newsletter"),
-            blank=True, null=True)
+    public_slug = models.SlugField(
+        verbose_name=_("slug"),
+        unique=True,
+        help_text=_("Unique slug to allow public access to the newsletter"),
+        blank=True, null=True)
 
     class Meta:
         ordering = ('-date_created',)
@@ -51,7 +78,8 @@ class Job(models.Model):
         app_label = 'pennyblack'
 
     def __unicode__(self):
-        return (self.newsletter.subject if self.newsletter is not None else "unasigned delivery task")
+        return (self.newsletter.subject \
+            if self.newsletter is not None else "unasigned delivery task")
 
     def delete(self, *args, **kwargs):
         """
@@ -63,8 +91,8 @@ class Job(models.Model):
 
     @property
     def public_url(self):
-        return self.newsletter.get_base_url() + reverse('pennyblack.views.view_public', args=(self.public_slug,))
-
+        return self.newsletter.get_base_url() \
+            + reverse('pennyblack.views.view_public', args=(self.public_slug,))
 
     @property
     def count_mails_total(self):
@@ -78,7 +106,8 @@ class Job(models.Model):
     def percentage_mails_sent(self):
         if self.count_mails_total == 0:
             return 0
-        return round(float(self.count_mails_sent) / float(self.count_mails_total) * 100, 1)
+        return round(float(self.count_mails_sent) \
+            / float(self.count_mails_total) * 100, 1)
 
     @property
     def count_mails_viewed(self):
@@ -92,7 +121,8 @@ class Job(models.Model):
     def percentage_mails_viewed(self):
         if self.count_mails_delivered == 0:
             return 0
-        return round(float(self.count_mails_viewed) / self.count_mails_delivered * 100, 1)
+        return round(float(self.count_mails_viewed) \
+            / self.count_mails_delivered * 100, 1)
 
     @property
     def count_mails_bounced(self):
@@ -106,13 +136,15 @@ class Job(models.Model):
     def percentage_mails_clicked(self):
         if self.count_mails_delivered == 0:
             return 0
-        return round(float(self.count_mails_clicked) / float(self.count_mails_delivered) * 100, 1)
+        return round(float(self.count_mails_clicked) \
+            / float(self.count_mails_delivered) * 100, 1)
 
     @property
     def percentage_mails_bounced(self):
         if self.count_mails_sent == 0:
             return 0
-        return round(float(self.count_mails_bounced) / float(self.count_mails_sent) * 100, 1)
+        return round(float(self.count_mails_bounced) \
+            / float(self.count_mails_sent) * 100, 1)
 
     # fields
     def field_mails_sent(self):
@@ -131,7 +163,7 @@ class Job(models.Model):
         """
         Is used to determine if a send button should be displayed.
         """
-        if not self.status in settings.JOB_STATUS_CAN_SEND:
+        if self.status not in settings.JOB_STATUS_CAN_SEND:
             return False
         return self.is_valid()
 
@@ -139,7 +171,7 @@ class Job(models.Model):
         """
         Used to determine if a job's newsletter can be viewed publically
         """
-        if not self.status in settings.JOB_STATUS_CAN_VIEW_PUBLIC:
+        if self.status not in settings.JOB_STATUS_CAN_VIEW_PUBLIC:
             return False
         return self.is_valid()
 
@@ -180,7 +212,10 @@ class Job(models.Model):
             link = link.replace(old, new)
         link = self.links.create(link_target=link)
         link.save()
-        return '{{base_url}}' + reverse('pennyblack.redirect_link', kwargs={'mail_hash': '{{mail.mail_hash}}', 'link_hash': link.link_hash}).replace('%7B', '{').replace('%7D', '}')
+        return '{{base_url}}' + reverse(
+            'pennyblack.redirect_link',
+            kwargs={'mail_hash': '{{mail.mail_hash}}',
+                    'link_hash': link.link_hash}).replace('%7B', '{').replace('%7D', '}')
 
     def start_sending(self):
         self.status = 11
@@ -225,6 +260,3 @@ class JobStatistic(Job):
         verbose_name = _("statistic")
         verbose_name_plural = _("statistics")
         app_label = 'pennyblack'
-
-
-

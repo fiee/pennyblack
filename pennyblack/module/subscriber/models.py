@@ -1,3 +1,7 @@
+# -*- coding: utf-8 -*-
+from __future__ import absolute_import
+from __future__ import unicode_literals
+from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 try:
     from django.contrib.contenttypes.fields import GenericRelation
@@ -6,14 +10,16 @@ except ImportError:
 from django.db import models
 
 from pennyblack import settings
-from pennyblack.options import NewsletterReceiverMixin, JobUnitMixin, JobUnitAdmin
-
+from pennyblack.options import (NewsletterReceiverMixin,
+                                JobUnitMixin, JobUnitAdmin)
+from pennyblack.models import Newsletter
+from pennyblack.module.subscriber.views import unsubscribe
 try:
+    # when does that fail?
     from django.utils.timezone import now
 except ImportError:
-    from datetime import datetime
-    now = datetime.now
-
+    import datetime
+    now = datetime.datetime.now
 
 
 class NewsletterSubscriberManager(models.Manager):
@@ -45,20 +51,27 @@ class NewsletterSubscriber(models.Model, NewsletterReceiverMixin):
     A generic newsletter subscriber
     """
     # from pennyblack.models.mail import Mail
-    email = models.EmailField(verbose_name="email address", unique=True)
-    groups = models.ManyToManyField('subscriber.SubscriberGroup', verbose_name="Groups",
-                                    related_name='subscribers')
-    date_subscribed = models.DateTimeField(verbose_name="Subscribe Date",
-                                           default=now)
+    email = models.EmailField(
+        verbose_name=_("email address"),
+        unique=True)
+    groups = models.ManyToManyField(
+        'subscriber.SubscriberGroup',
+        verbose_name=_("Groups"),
+        related_name='subscribers')
+    date_subscribed = models.DateTimeField(
+        verbose_name=_("Subscribe Date"),
+        default=now)
     mails = GenericRelation('pennyblack.Mail')
-    is_active = models.BooleanField(verbose_name="Active", default=True)
+    is_active = models.BooleanField(
+        verbose_name=_("Active"),
+        default=True)
 
     objects = newsletter_subscriber_manager
     default_manager = newsletter_subscriber_manager
 
     class Meta:
-        verbose_name = "Subscriber"
-        verbose_name_plural = "Subscribers"
+        verbose_name = _("Subscriber")
+        verbose_name_plural = _("Subscribers")
         app_label = "subscriber"
 
     def __unicode__(self):
@@ -116,13 +129,16 @@ class SubscriberGroup(models.Model, JobUnitMixin):
     """
     Groups to add newsletter subscribers
     """
-    name = models.CharField(max_length=50, verbose_name="Name", unique=True)
+    name = models.CharField(
+        max_length=50,
+        verbose_name=_("Name"),
+        unique=True)
 
     objects = SubscriberGroupManager()
 
     class Meta:
-        verbose_name = "Subscriber Group"
-        verbose_name_plural = "Subscriber Groups"
+        verbose_name = _("Subscriber Group")
+        verbose_name_plural = _("Subscriber Groups")
         app_label = "subscriber"
 
     def __unicode__(self):
@@ -134,7 +150,7 @@ class SubscriberGroup(models.Model, JobUnitMixin):
 
     def get_member_count(self):
         return self.member_count
-    get_member_count.short_description = "Member Count"
+    get_member_count.short_description = _("Member Count")
 
     def get_newsletter_receiver_collections(self):
         """
@@ -153,6 +169,4 @@ class SubscriberGroupAdmin(JobUnitAdmin):
     list_display = ('__unicode__', 'get_member_count')
 
 # register view links
-from pennyblack.models import Newsletter
-from pennyblack.module.subscriber.views import unsubscribe
 Newsletter.register_view_link('subscriber.unsubscribe', unsubscribe)

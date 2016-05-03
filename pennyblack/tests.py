@@ -24,6 +24,7 @@ class NewsletterTestCase(unittest.TestCase):
 #     def test_is_valid(self):
 #         self.assertFalse(self.mail.is_valid())
 
+
 class RichtextContentTest(unittest.TestCase):
     content = None
     job = None
@@ -37,7 +38,6 @@ class RichtextContentTest(unittest.TestCase):
         def add_link(self, link):
             self.times += 1
             return '{{base_url}}' + self.link
-
 
     def setUp(self):
         try:

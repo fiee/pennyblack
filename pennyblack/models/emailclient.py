@@ -17,12 +17,25 @@ class EmailClient(models.Model):
     """
     Stores some information about the used email client and about the user
     """
-    mail = models.ForeignKey('pennyblack.Mail', related_name='clients')
-    user_agent = models.CharField(max_length=255, db_index=True)
-    referer = models.CharField(max_length=1023, blank=True)
-    ip_address = models.IPAddressField()
-    visited = models.DateTimeField(default=now)
-    contact_type = models.CharField(max_length=15, default='')
+    mail = models.ForeignKey(
+        'pennyblack.Mail',
+        verbose_name=_('Mail message'),
+        related_name='clients')
+    user_agent = models.CharField(
+        verbose_name=_('User Agent'),
+        max_length=255,
+        db_index=True)
+    referer = models.CharField(
+        verbose_name=_('Referer'),
+        max_length=1023, blank=True)
+    ip_address = models.IPAddressField(
+        verbose_name=_('IP address'))
+    visited = models.DateTimeField(
+        verbose_name=_('Visited'),
+        default=now)
+    contact_type = models.CharField(
+        verbose_name=_('Contact type'),
+        max_length=15, default='')
 
     class Meta:
         verbose_name = _('email client')

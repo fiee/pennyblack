@@ -1,16 +1,19 @@
+from __future__ import absolute_import
+from __future__ import unicode_literals
 from django.core import files
 from django.db import models
 try:
-    from django.forms.utils import ErrorList # django >= 1.8
+    from django.forms.utils import ErrorList  # django >= 1.8
 except ImportError:
-    from django.forms.util import ErrorList  # django < 1.8
+    from django.forms.util import ErrorList   # django < 1.8
 from django.template import Context, Template, TemplateSyntaxError
 from django.utils.translation import ugettext_lazy as _
 
 from pennyblack import settings
 from pennyblack.models.link import check_if_redirect_url, is_link
 
-from feincms.content.richtext.models import RichTextContentAdminForm, RichTextContent
+from feincms.content.richtext.models import (RichTextContentAdminForm, 
+                                             RichTextContent)
 from feincms.module.medialibrary.models import MediaFile
 
 import re
@@ -50,7 +53,9 @@ class TextOnlyNewsletterContent(RichTextContent):
     """
     Has a title and a text wich both can contain template code.
     """
-    title = models.CharField(max_length=500)
+    title = models.CharField(
+        verbose_name=_('Title'),
+        max_length=500)
     form = NewsletterSectionAdminForm
     feincms_item_editor_form = NewsletterSectionAdminForm
 
@@ -104,7 +109,9 @@ class TextOnlyNewsletterContent(RichTextContent):
     def render(self, request, **kwargs):
         context = request.content_context
         context['request'] = request
-        context.update({'content': self, 'content_width': settings.NEWSLETTER_CONTENT_WIDTH})
+        context.update({
+            'content': self,
+            'content_width': settings.NEWSLETTER_CONTENT_WIDTH})
         if hasattr(self, 'get_extra_context'):
             context.update(self.get_extra_context())
         return self.get_template().render(Context(context))
@@ -114,14 +121,29 @@ class TextWithImageNewsletterContent(TextOnlyNewsletterContent):
     """
     Like a TextOnlyNewsletterContent but with extra image field
     """
-    image_original = models.ForeignKey(MediaFile)
-    image_thumb = models.ImageField(upload_to='newsletter/images', blank=True,
-                                    width_field='image_width', height_field='image_height')
-    image_width = models.IntegerField(default=0)
-    image_height = models.IntegerField(default=0)
-    image_url = models.CharField(max_length=250, blank=True)
-    image_url_replaced = models.CharField(max_length=250, default='')
-    position = models.CharField(max_length=10, choices=settings.TEXT_AND_IMAGE_CONTENT_POSITIONS)
+    image_original = models.ForeignKey(
+        MediaFile,
+        verbose_name=_('Image Original'))
+    image_thumb = models.ImageField(
+        verbose_name=_('Image Thumbnail'),
+        upload_to='newsletter/images', blank=True,
+        width_field='image_width', height_field='image_height')
+    image_width = models.IntegerField(
+        verbose_name=_('Image Width'),
+        default=0)
+    image_height = models.IntegerField(
+        verbose_name=_('Image Height'),
+        default=0)
+    image_url = models.CharField(
+        verbose_name=_('Image URL'),
+        max_length=250, blank=True)
+    image_url_replaced = models.CharField(
+        verbose_name=_('Replaced Image URL'),
+        max_length=250, default='')
+    position = models.CharField(
+        verbose_name=_('Position'),
+        max_length=10,
+        choices=settings.TEXT_AND_IMAGE_CONTENT_POSITIONS)
 
     baselayout = "content/text_and_image/section.html"
 
@@ -131,7 +153,9 @@ class TextWithImageNewsletterContent(TextOnlyNewsletterContent):
         verbose_name_plural = _('text and image contents')
 
     def get_extra_context(self):
-        text_width = settings.NEWSLETTER_CONTENT_WIDTH if self.position == 'top' else (settings.NEWSLETTER_CONTENT_WIDTH - 20 - settings.TEXT_AND_IMAGE_CONTENT_IMAGE_WIDTH_SIDE)
+        text_width = settings.NEWSLETTER_CONTENT_WIDTH \
+            if self.position == 'top' \
+            else (settings.NEWSLETTER_CONTENT_WIDTH - 20 - settings.TEXT_AND_IMAGE_CONTENT_IMAGE_WIDTH_SIDE)
         return {
             'image_width': self.image_width,
             'image_height': self.image_height,
@@ -155,11 +179,15 @@ class TextWithImageNewsletterContent(TextOnlyNewsletterContent):
             self.save()
 
     def save(self, *args, **kwargs):
-        image_width = settings.NEWSLETTER_CONTENT_WIDTH if self.position == 'top' else settings.TEXT_AND_IMAGE_CONTENT_IMAGE_WIDTH_SIDE
+        image_width = settings.NEWSLETTER_CONTENT_WIDTH \
+            if self.position == 'top' \
+            else settings.TEXT_AND_IMAGE_CONTENT_IMAGE_WIDTH_SIDE
         im = Image.open(self.image_original.file.path)
         im.thumbnail((image_width, 1000), Image.ANTIALIAS)
         img_temp = files.temp.NamedTemporaryFile()
         im.save(img_temp, 'jpeg', quality=settings.JPEG_QUALITY, optimize=True)
         img_temp.flush()
-        self.image_thumb.save(os.path.split(self.image_original.file.name)[1], files.File(img_temp), save=False)
+        self.image_thumb.save(
+            os.path.split(self.image_original.file.name)[1],
+            files.File(img_temp), save=False)
         super(TextWithImageNewsletterContent, self).save(*args, **kwargs)
