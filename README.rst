@@ -45,6 +45,7 @@ Installation
 
     * pydns==2.3.4
     * pyspf==2.0.5
+    * celery
     
 6. Import Pennyblack and add a newsletter template to your `models.py`::
 
@@ -80,6 +81,7 @@ Dependencies
     *   pyspf
     *   pydns
     *   pil(low)
+    *   celery
     
 *   Project Settings
 

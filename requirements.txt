@@ -3,3 +3,4 @@ Pillow
 FeinCMS
 pydns
 pyspf
+celery
