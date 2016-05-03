@@ -41,6 +41,7 @@ setup(
         'Django(>=1.3)',
         'pydns(>=2.3.4)',  # current: 2.3.6
         'pyspf(>=2.0.5)',  # current: 2.0.11
+        'celery',
         'pil',
     ],
     include_package_data=True,
