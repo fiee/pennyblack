@@ -1,5 +1,11 @@
-VERSION = (0, 4, 0, 'pre')
+# -*- coding: utf-8 -*-
+from __future__ import unicode_literals
+from django.utils.translation import ugettext_lazy as _
+
+VERSION = (0, 4, 1, 'fiëé')
 __version__ = '.'.join(map(str, VERSION))
+verbose_name = _('Pennyblack')
+verbose_name_plural = _('Pennyblack')
 
 # Do not use Django settings at module level as recommended
 try:

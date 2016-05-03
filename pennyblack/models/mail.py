@@ -1,7 +1,7 @@
 import hashlib
 import random
 from rfc822 import dump_address_pair
-
+from django.utils.translation import ugettext_lazy as _
 from django.contrib import admin
 try:
     from django.contrib.contenttypes.fields import GenericForeignKey
