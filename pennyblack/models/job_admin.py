@@ -15,6 +15,11 @@ from django.core.urlresolvers import reverse
 
 from pennyblack import settings
 
+try:
+    from django.utils.timezone import now
+except ImportError:
+    now = datetime.datetime.now
+
 
 class JobAdminForm(forms.ModelForm):
     from pennyblack.models.newsletter import Newsletter
@@ -113,7 +118,7 @@ class JobStatisticAdmin(admin.ModelAdmin):
             t = date_start + datetime.timedelta(hours=i)
             count_opened = obj.mails.exclude(viewed=None).filter(viewed__lt=t).count()
             opened_serie.append('[%s000,%s]' % (t.strftime('%s'), count_opened))
-            if t > datetime.datetime.now():
+            if t > now():
                 break
         return {
             'opened_serie': ','.join(opened_serie),
