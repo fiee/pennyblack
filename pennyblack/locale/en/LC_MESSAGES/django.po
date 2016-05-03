@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: pennyblack EN\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-05-03 18:03+0600\n"
+"POT-Creation-Date: 2016-05-03 18:40+0600\n"
 "PO-Revision-Date: 2016-05-03 18:05+0600\n"
 "Last-Translator: Henning Hraban Ramm <hraban@fiee.net>\n"
 "Language-Team: \n"
@@ -430,6 +430,11 @@ msgstr ""
 msgid "History"
 msgstr ""
 
+#: templates/admin/pennyblack/job/change_form.html:6
+#: templates/admin/pennyblack/job/send_confirmation.html:28
+msgid "Save and send"
+msgstr ""
+
 #: templates/admin/pennyblack/job/send_confirmation.html:6
 #: templates/admin/pennyblack/jobstatistic/email_list.html:5
 #: templates/admin/pennyblack/jobstatistic/user_agents.html:5
@@ -493,6 +498,14 @@ msgstr ""
 msgid "link statistics"
 msgstr ""
 
+#: templates/admin/pennyblack/jobstatistic/change_form.html:41
+msgid "Target"
+msgstr ""
+
+#: templates/admin/pennyblack/jobstatistic/change_form.html:42
+msgid "Clicks"
+msgstr ""
+
 #: templates/admin/pennyblack/jobstatistic/change_form.html:57
 msgid "graphs"
 msgstr ""
@@ -542,6 +555,10 @@ msgstr ""
 msgid "select collection"
 msgstr ""
 
+#: templates/admin/pennyblack/jobunit/select_receiver_collection.html:14
+msgid "Select Receiver Collection"
+msgstr ""
+
 #: templates/admin/pennyblack/jobunit/select_receiver_collection.html:19
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
@@ -558,4 +575,17 @@ msgstr ""
 
 #: templates/pennyblack/base_newsletter.html:26
 msgid "here"
+msgstr ""
+
+#: templates/pennyblack/subscriber/unsubscribe.html:2
+#: templates/pennyblack/subscriber/unsubscribe.html:7
+msgid "Unsubscribe"
+msgstr ""
+
+#: templates/pennyblack/subscriber/unsubscribe.html:4
+msgid "You have been removed from the list."
+msgstr ""
+
+#: templates/pennyblack/subscriber/unsubscribe.html:6
+msgid "Are you sure you want to unsubscribe this newsletter?"
 msgstr ""
