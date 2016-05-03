@@ -1,5 +1,7 @@
+import datetime
 from django.conf.urls import patterns, url
 from django.contrib import admin
+from django.db import models
 try:
     from django.contrib.admin.utils import unquote
 except ImportError:
@@ -13,9 +15,11 @@ from django.core.urlresolvers import reverse
 
 from pennyblack import settings
 
+
 class JobAdminForm(forms.ModelForm):
     from pennyblack.models.newsletter import Newsletter
     newsletter = forms.ModelChoiceField(queryset=Newsletter.objects.massmail())
+
 
 class JobAdmin(admin.ModelAdmin):
     from pennyblack.models.link import LinkInline
@@ -28,7 +32,7 @@ class JobAdmin(admin.ModelAdmin):
     fields = ('newsletter', 'collection', 'status', 'group_object', 'field_mails_total', 'field_mails_sent', 'date_deliver_start', 'date_deliver_finished', 'public_slug', 'utm_campaign')
     readonly_fields = ('collection', 'status', 'group_object', 'field_mails_total', 'field_mails_sent', 'date_deliver_start', 'date_deliver_finished',)
     inlines = (LinkInline, MailInline,)
-    raw_id_fields=('newsletter',)
+    raw_id_fields = ('newsletter',)
     massmail_form = JobAdminForm
 
     def get_form(self, request, obj=None, **kwargs):
@@ -109,7 +113,7 @@ class JobStatisticAdmin(admin.ModelAdmin):
             t = date_start + datetime.timedelta(hours=i)
             count_opened = obj.mails.exclude(viewed=None).filter(viewed__lt=t).count()
             opened_serie.append('[%s000,%s]' % (t.strftime('%s'), count_opened))
-            if t > now():
+            if t > datetime.datetime.now():
                 break
         return {
             'opened_serie': ','.join(opened_serie),
