@@ -1,5 +1,4 @@
 import imaplib
-import datetime
 import socket
 from django.contrib import admin
 from django.core.mail.utils import DNS_NAME
@@ -7,6 +6,12 @@ from django.db import models
 from django.utils.translation import ugettext_lazy as _
 
 from pennyblack import settings
+
+try:
+    from django.utils.timezone import now
+except ImportError:
+    from datetime import datetime
+    now = datetime.now
 
 if settings.BOUNCE_DETECTION_ENABLE:
     # requires patch!
@@ -84,7 +89,7 @@ class Sender(models.Model):
         from pennyblack.models import Mail
         if not settings.BOUNCE_DETECTION_ENABLE:
             return
-        oldest_date = datetime.datetime.now() - \
+        oldest_date = now() - \
             datetime.timedelta(days=settings.BOUNCE_DETECTION_DAYS_TO_LOOK_BACK)
         try:
             if self.imap_ssl:
