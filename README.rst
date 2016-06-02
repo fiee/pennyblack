@@ -67,8 +67,8 @@ Installation
         
 7. Migrate::
 
-    ./manage.py makemigrations pennyblack subscriber
-    ./manage.py migrate pennyblack subscriber
+    ./manage.py makemigrations yourproject pennyblack subscriber
+    ./manage.py migrate yourproject pennyblack subscriber
     
 
 Dependencies
