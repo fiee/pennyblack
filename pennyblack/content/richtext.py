@@ -2,19 +2,23 @@ from __future__ import absolute_import
 from __future__ import unicode_literals
 from django.core import files
 from django.db import models
+from django import forms
 try:
     from django.forms.utils import ErrorList  # django >= 1.8
 except ImportError:
     from django.forms.util import ErrorList   # django < 1.8
 from django.template import Context, Template, TemplateSyntaxError
+from django.utils.html import escape
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext_lazy as _
 
 from pennyblack import settings
 from pennyblack.models.link import check_if_redirect_url, is_link
 
-from feincms.content.richtext.models import (RichTextContentAdminForm, 
-                                             RichTextContent)
+from feincms.contents import RichTextContent
 from feincms.module.medialibrary.models import MediaFile
+from feincms.admin.item_editor import ItemEditorForm
+from feincms.utils import get_object
 
 import re
 import os
@@ -22,6 +26,66 @@ from PIL import Image
 import exceptions
 
 HREF_RE = re.compile(r'href\="((\{\{[^}]+\}\}|[^"><])+)"')
+
+
+# copied from old version of FeinCMS:
+# https://github.com/feincms/feincms/blob/b4c36b6e3f1f67f271dab83f3382783ec0a48ed3/feincms/content/richtext/models.py
+class RichTextContentAdminForm(ItemEditorForm):
+    #: If FEINCMS_TIDY_ALLOW_WARNINGS_OVERRIDE allows, we'll convert this into
+    # a checkbox so the user can choose whether to ignore HTML validation
+    # warnings instead of fixing them:
+    seen_tidy_warnings = forms.BooleanField(
+        required=False,
+        label=_("HTML Tidy"),
+        help_text=_("Ignore the HTML validation warnings"),
+        widget=forms.HiddenInput
+    )
+
+    def clean(self):
+        cleaned_data = super(RichTextContentAdminForm, self).clean()
+
+        if settings.FEINCMS_TIDY_HTML:
+            text, errors, warnings = get_object(
+                settings.FEINCMS_TIDY_FUNCTION)(cleaned_data['text'])
+
+            # Ick, but we need to be able to update text and seen_tidy_warnings
+            self.data = self.data.copy()
+
+            # We always replace the HTML with the tidied version:
+            cleaned_data['text'] = text
+            self.data['%s-text' % self.prefix] = text
+
+            if settings.FEINCMS_TIDY_SHOW_WARNINGS and (errors or warnings):
+                if settings.FEINCMS_TIDY_ALLOW_WARNINGS_OVERRIDE:
+                    # Convert the ignore input from hidden to Checkbox so the
+                    # user can change it:
+                    self.fields['seen_tidy_warnings'].widget =\
+                        forms.CheckboxInput()
+
+                if errors or not (
+                        settings.FEINCMS_TIDY_ALLOW_WARNINGS_OVERRIDE and
+                        cleaned_data['seen_tidy_warnings']):
+                    self._errors["text"] = self.error_class([mark_safe(
+                        _(
+                            "HTML validation produced %(count)d warnings."
+                            " Please review the updated content below before"
+                            " continuing: %(messages)s"
+                        ) % {
+                            "count": len(warnings) + len(errors),
+                            "messages": '<ul><li>%s</li></ul>' % (
+                                "</li><li>".join(
+                                    map(escape, errors + warnings))),
+                        }
+                    )])
+
+                # If we're allowed to ignore warnings and we don't have any
+                # errors we'll set our hidden form field to allow the user to
+                # ignore warnings on the next submit:
+                if (not errors and
+                        settings.FEINCMS_TIDY_ALLOW_WARNINGS_OVERRIDE):
+                    self.data["%s-seen_tidy_warnings" % self.prefix] = True
+
+        return cleaned_data
 
 
 class NewsletterSectionAdminForm(RichTextContentAdminForm):
