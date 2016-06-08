@@ -1,4 +1,5 @@
 eclipse.preferences.version=1
+encoding//build/lib/pennyblack/module/subscriber/models.py=utf-8
 encoding//docs/conf.py=utf-8
 encoding//pennyblack/__init__.py=utf-8
 encoding//pennyblack/models/__init__.py=utf-8

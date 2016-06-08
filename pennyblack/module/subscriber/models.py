@@ -8,18 +8,13 @@ try:
 except ImportError:
     from django.contrib.contenttypes import GenericRelation
 from django.db import models
+from django.utils.timezone import now
 
 from pennyblack import settings
 from pennyblack.options import (NewsletterReceiverMixin,
                                 JobUnitMixin, JobUnitAdmin)
 from pennyblack.models import Newsletter
 from pennyblack.module.subscriber.views import unsubscribe
-try:
-    # when does that fail?
-    from django.utils.timezone import now
-except ImportError:
-    import datetime
-    now = datetime.datetime.now
 
 
 class NewsletterSubscriberManager(models.Manager):

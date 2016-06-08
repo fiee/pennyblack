@@ -1,17 +1,16 @@
-# from django.conf.urls import patterns, url
+import datetime
+import smtplib
 try:
     from django.contrib.contenttypes.fields import GenericForeignKey
 except ImportError:
     from django.contrib.contenttypes.generic import GenericForeignKey
 from django.core import mail
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db import models
 from django.utils import translation
 from django.utils.translation import ugettext_lazy as _
 
 from pennyblack import settings
-
-import datetime
 
 try:
     from django.utils import timezone
@@ -78,8 +77,14 @@ class Job(models.Model):
         app_label = 'pennyblack'
 
     def __unicode__(self):
-        return (self.newsletter.subject \
+        return (self.newsletter.subject
             if self.newsletter is not None else "unasigned delivery task")
+
+    def clean(self, *args, **kwargs):
+        self.public_slug = self.public_slug.strip() 
+        if self.public_slug == "":
+            self.public_slug = None
+        super(Job, self).clean(*args, **kwargs)
 
     def delete(self, *args, **kwargs):
         """
@@ -91,8 +96,13 @@ class Job(models.Model):
 
     @property
     def public_url(self):
-        return self.newsletter.get_base_url() \
-            + reverse('pennyblack.views.view_public', args=(self.public_slug,))
+        try:
+            if self.public_slug:
+                return self.newsletter.get_base_url() \
+                    + reverse('pennyblack.views.view_public', args=(self.public_slug,))
+        except (NoReverseMatch,):
+            pass
+        return None
 
     @property
     def count_mails_total(self):
@@ -242,11 +252,16 @@ class Job(models.Model):
             connection = mail.get_connection()
             connection.open()
             for newsletter_mail in self.mails.filter(sent=False).iterator():
-                connection.send_messages([newsletter_mail.get_message()])
-                newsletter_mail.mark_sent()
+                try:
+                    connection.send_messages([newsletter_mail.get_message()])
+                except smtplib.SMTPRecipientsRefused:
+                    newsletter_mail.bounce()
+                else:
+                    newsletter_mail.mark_sent()
             connection.close()
         except:
             self.status = 41
+            self.save()
             raise
         else:
             self.status = 31
