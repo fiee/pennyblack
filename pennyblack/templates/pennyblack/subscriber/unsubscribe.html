@@ -1,7 +1,8 @@
-<h2>Unsubscribe</h2>
+{% load i18n %}
+<h2>{% trans "Unsubscribe" %}</h2>
 {% if done %}
-    you habe been removed from the list
+<p>{% trans "You have been removed from the list." %}</p>
 {% else %}
-<p>Are you sure you want to unsubscribe this newsletter?</p>
-<a href=".?unsubscribe=1">unsubscribe</a>
+<p>{% trans "Are you sure you want to unsubscribe this newsletter?" %}</p>
+<a href=".?unsubscribe=1">{% trans "Unsubscribe" %}</a>
 {% endif %}

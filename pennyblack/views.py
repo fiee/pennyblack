@@ -69,20 +69,30 @@ def preview(request, newsletter_id):
             mail = job.mails.all()[0]
             request.content_context.update(mail.get_context())
             request.content_context.update({'base_url': ''})
-    return render_to_response(newsletter.template.path, request.content_context, context_instance=RequestContext(request))
+    return render_to_response(
+        newsletter.template.path,
+        request.content_context,
+        context_instance=RequestContext(request))
+
 
 def view_public(request, job_slug):
     """
     View a job by public slug.
     """
-    job = get_object_or_404(Job, public_slug=job_slug, status__in=settings.JOB_STATUS_CAN_VIEW_PUBLIC)
+    job = get_object_or_404(
+        Job, public_slug=job_slug,
+        status__in=settings.JOB_STATUS_CAN_VIEW_PUBLIC)
     newsletter = job.newsletter
     request.content_context = {
         'newsletter': newsletter,
         'public_url': job.public_url,
         'webview': True,
     }
-    return render_to_response(newsletter.template.path, request.content_context, context_instance=RequestContext(request))
+    return render_to_response(
+        newsletter.template.path,
+        request.content_context,
+        context_instance=RequestContext(request))
+
 
 @needs_mail
 @needs_link
@@ -94,7 +104,8 @@ def redirect_link(request, mail, link):
     mail.on_landing(request)
     target = link.click(mail)
     if isinstance(target, types.FunctionType):
-        return HttpResponseRedirect(reverse('pennyblack.proxy', args=(mail.mail_hash, link.link_hash)))
+        return HttpResponseRedirect(
+            reverse('pennyblack.proxy', args=(mail.mail_hash, link.link_hash)))
     # disassemble the url
     scheme, netloc, path, params, query, fragment = tuple(urlparse(target))
     if scheme in ('http', 'https'):  # insert ga tracking if scheme is appropriate
@@ -119,7 +130,8 @@ def redirect_link(request, mail, link):
 @needs_mail
 def ping(request, mail, filename):
     mail.mark_viewed(request, contact_type='ping')
-    return HttpResponseRedirect(mail.job.newsletter.header_image.get_absolute_url())
+    return HttpResponseRedirect(
+        mail.job.newsletter.header_image.get_absolute_url())
 
 
 @needs_mail

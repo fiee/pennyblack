@@ -1,21 +1,16 @@
-from django import forms
-from django.contrib import admin
-from django.contrib.admin.util import unquote
-from django.conf.urls.defaults import patterns, url
-from django.contrib.contenttypes import generic
+import datetime
+import smtplib
+try:
+    from django.contrib.contenttypes.fields import GenericForeignKey
+except ImportError:
+    from django.contrib.contenttypes.generic import GenericForeignKey
 from django.core import mail
-from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.db import models
-from django.http import HttpResponseRedirect
-from django.shortcuts import render_to_response
 from django.utils import translation
 from django.utils.translation import ugettext_lazy as _
-import smtplib
 
 from pennyblack import settings
-
-import datetime
 
 try:
     from django.utils import timezone
@@ -25,28 +20,55 @@ else:
     now = timezone.now
 
 
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
 # Job
-#-----------------------------------------------------------------------------
+# -----------------------------------------------------------------------------
+
+
 class Job(models.Model):
     """A bunch of participants which receive a newsletter"""
-    newsletter = models.ForeignKey('pennyblack.Newsletter', related_name="jobs", null=True)
-    status = models.IntegerField(choices=settings.JOB_STATUS, default=1)
-    date_created = models.DateTimeField(verbose_name=_("created"), default=now)
-    date_deliver_start = models.DateTimeField(blank=True, null=True, verbose_name=_("started delivering"), default=None)
-    date_deliver_finished = models.DateTimeField(blank=True, null=True, verbose_name=_("finished delivering"), default=None)
+    newsletter = models.ForeignKey(
+        'pennyblack.Newsletter',
+        verbose_name=_('Newsletter'),
+        related_name="jobs", null=True)
+    status = models.IntegerField(
+        verbose_name=_('Status'),
+        choices=settings.JOB_STATUS,
+        default=1)
+    date_created = models.DateTimeField(
+        verbose_name=_("Created"),
+        default=now)
+    date_deliver_start = models.DateTimeField(
+        blank=True, null=True,
+        verbose_name=_("started delivering"),
+        default=None)
+    date_deliver_finished = models.DateTimeField(
+        blank=True, null=True,
+        verbose_name=_("finished delivering"),
+        default=None)
 
-    content_type = models.ForeignKey('contenttypes.ContentType', null=True, blank=True)
-    object_id = models.PositiveIntegerField(null=True, blank=True)
-    group_object = generic.GenericForeignKey('content_type', 'object_id')
-    collection = models.TextField(blank=True)
+    content_type = models.ForeignKey(
+        'contenttypes.ContentType',
+        verbose_name=_('Content Type'),
+        null=True, blank=True)
+    object_id = models.PositiveIntegerField(
+        verbose_name=_('Object ID'),
+        null=True, blank=True)
+    group_object = GenericForeignKey('content_type', 'object_id')
+    collection = models.TextField(
+        verbose_name=_('Collection'),
+        blank=True)
 
-    #ga tracking
-    utm_campaign = models.SlugField(verbose_name=_("utm campaign"), blank=True)
+    # ga tracking
+    utm_campaign = models.SlugField(
+        verbose_name=_("utm campaign"),
+        blank=True)
 
-    public_slug = models.SlugField(verbose_name=_("slug"), unique=True, 
-            help_text=_("Unique slug to allow public access to the newsletter"),
-            blank=True, null=True)
+    public_slug = models.SlugField(
+        verbose_name=_("slug"),
+        unique=True,
+        help_text=_("Unique slug to allow public access to the newsletter"),
+        blank=True, null=True)
 
     class Meta:
         ordering = ('-date_created',)
@@ -55,8 +77,14 @@ class Job(models.Model):
         app_label = 'pennyblack'
 
     def __unicode__(self):
-        return (self.newsletter.subject if self.newsletter is not None else "unasigned delivery task")
+        return (self.newsletter.subject
+            if self.newsletter is not None else "unasigned delivery task")
 
+    def clean(self, *args, **kwargs):
+        self.public_slug = self.public_slug.strip() 
+        if self.public_slug == "":
+            self.public_slug = None
+        super(Job, self).clean(*args, **kwargs)
 
     def clean(self, *args, **kwargs):
         self.public_slug = self.public_slug.strip() 
@@ -76,11 +104,11 @@ class Job(models.Model):
     def public_url(self):
         try:
             if self.public_slug:
-                return self.newsletter.get_base_url() + reverse('pennyblack.views.view_public', args=(self.public_slug,))
+                return self.newsletter.get_base_url() \
+                    + reverse('pennyblack.views.view_public', args=(self.public_slug,))
         except (NoReverseMatch,):
             pass
         return None
-
 
     @property
     def count_mails_total(self):
@@ -94,7 +122,8 @@ class Job(models.Model):
     def percentage_mails_sent(self):
         if self.count_mails_total == 0:
             return 0
-        return round(float(self.count_mails_sent) / float(self.count_mails_total) * 100, 1)
+        return round(float(self.count_mails_sent) \
+            / float(self.count_mails_total) * 100, 1)
 
     @property
     def count_mails_viewed(self):
@@ -108,7 +137,8 @@ class Job(models.Model):
     def percentage_mails_viewed(self):
         if self.count_mails_delivered == 0:
             return 0
-        return round(float(self.count_mails_viewed) / self.count_mails_delivered * 100, 1)
+        return round(float(self.count_mails_viewed) \
+            / self.count_mails_delivered * 100, 1)
 
     @property
     def count_mails_bounced(self):
@@ -122,13 +152,15 @@ class Job(models.Model):
     def percentage_mails_clicked(self):
         if self.count_mails_delivered == 0:
             return 0
-        return round(float(self.count_mails_clicked) / float(self.count_mails_delivered) * 100, 1)
+        return round(float(self.count_mails_clicked) \
+            / float(self.count_mails_delivered) * 100, 1)
 
     @property
     def percentage_mails_bounced(self):
         if self.count_mails_sent == 0:
             return 0
-        return round(float(self.count_mails_bounced) / float(self.count_mails_sent) * 100, 1)
+        return round(float(self.count_mails_bounced) \
+            / float(self.count_mails_sent) * 100, 1)
 
     # fields
     def field_mails_sent(self):
@@ -147,7 +179,7 @@ class Job(models.Model):
         """
         Is used to determine if a send button should be displayed.
         """
-        if not self.status in settings.JOB_STATUS_CAN_SEND:
+        if self.status not in settings.JOB_STATUS_CAN_SEND:
             return False
         return self.is_valid()
 
@@ -155,7 +187,7 @@ class Job(models.Model):
         """
         Used to determine if a job's newsletter can be viewed publically
         """
-        if not self.status in settings.JOB_STATUS_CAN_VIEW_PUBLIC:
+        if self.status not in settings.JOB_STATUS_CAN_VIEW_PUBLIC:
             return False
         return self.is_valid()
 
@@ -196,7 +228,10 @@ class Job(models.Model):
             link = link.replace(old, new)
         link = self.links.create(link_target=link)
         link.save()
-        return '{{base_url}}' + reverse('pennyblack.redirect_link', kwargs={'mail_hash': '{{mail.mail_hash}}', 'link_hash': link.link_hash}).replace('%7B', '{').replace('%7D', '}')
+        return '{{base_url}}' + reverse(
+            'pennyblack.redirect_link',
+            kwargs={'mail_hash': '{{mail.mail_hash}}',
+                    'link_hash': link.link_hash}).replace('%7B', '{').replace('%7D', '}')
 
     def start_sending(self):
         self.status = 11
@@ -225,7 +260,7 @@ class Job(models.Model):
             for newsletter_mail in self.mails.filter(sent=False).iterator():
                 try:
                     connection.send_messages([newsletter_mail.get_message()])
-                except smtplib.SMTPRecipientsRefused as e:
+                except smtplib.SMTPRecipientsRefused:
                     newsletter_mail.bounce()
                 else:
                     newsletter_mail.mark_sent()
@@ -246,144 +281,3 @@ class JobStatistic(Job):
         verbose_name = _("statistic")
         verbose_name_plural = _("statistics")
         app_label = 'pennyblack'
-
-
-class JobAdminForm(forms.ModelForm):
-    from pennyblack.models.newsletter import Newsletter
-    newsletter = forms.ModelChoiceField(queryset=Newsletter.objects.massmail())
-
-
-class JobAdmin(admin.ModelAdmin):
-    from pennyblack.models.link import LinkInline
-    from pennyblack.models.mail import MailInline
-
-    date_hierarchy = 'date_deliver_start'
-    actions = None
-    list_display = ('newsletter', 'group_object', 'status', 'public_slug', 'field_mails_total', 'field_mails_sent', 'date_created')
-    list_filter = ('status', 'newsletter',)
-    fields = ('newsletter', 'collection', 'status', 'group_object', 'field_mails_total', 'field_mails_sent', 'date_deliver_start', 'date_deliver_finished', 'public_slug', 'utm_campaign')
-    readonly_fields = ('collection', 'status', 'group_object', 'field_mails_total', 'field_mails_sent', 'date_deliver_start', 'date_deliver_finished',)
-    inlines = (LinkInline, MailInline,)
-    massmail_form = JobAdminForm
-
-    def get_form(self, request, obj=None, **kwargs):
-        if obj and obj.status in settings.JOB_STATUS_CAN_EDIT:
-            kwargs['form'] = self.massmail_form
-        return super(JobAdmin, self).get_form(request, obj, **kwargs)
-
-    def get_readonly_fields(self, request, obj=None):
-        if obj and obj.status in settings.JOB_STATUS_CAN_EDIT:
-            return self.readonly_fields
-        else:
-            return self.readonly_fields + ('newsletter',)
-
-    def change_view(self, request, object_id, extra_context={}):
-        obj = self.get_object(request, unquote(object_id))
-        extra_context['can_send'] = obj.can_send()
-        request._pennyblack_job_obj = obj  # add object to request for the mail inline
-        return super(JobAdmin, self).change_view(request, object_id, extra_context=extra_context)
-
-    def send_newsletter_view(self, request, object_id):
-        obj = self.get_object(request, unquote(object_id))
-        if request.method == 'POST' and "_send" in request.POST:
-            obj.start_sending()
-            self.message_user(request, _("Newsletter has been marked for delivery."))
-        return HttpResponseRedirect(reverse('admin:%s_%s_changelist' % (self.model._meta.app_label, self.model._meta.module_name)))
-
-    def response_change(self, request, obj):
-        """
-        Determines the HttpResponse for the change_view stage.
-        """
-        if "_send_prepare" in request.POST:
-            context = {
-                'object': obj,
-                'opts': self.model._meta,
-                'app_label': self.model._meta.app_label,
-            }
-            context.update(csrf(request))
-            return render_to_response(
-                'admin/pennyblack/job/send_confirmation.html', context)
-        return super(JobAdmin, self).response_change(request, obj)
-
-    def get_urls(self):
-        urls = super(JobAdmin, self).get_urls()
-        info = self.model._meta.app_label, self.model._meta.module_name
-        my_urls = patterns('',
-            url(r'^(?P<object_id>\d+)/send/$', self.admin_site.admin_view(self.send_newsletter_view), name=('%s_%s_send' % info)),
-        )
-        return my_urls + urls
-
-    def has_add_permission(self, request):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-
-class JobStatisticAdmin(admin.ModelAdmin):
-    date_hierarchy = 'date_deliver_start'
-    actions = None
-    list_display = ('newsletter', 'group_object', 'field_mails_total', 'field_mails_sent', 'field_opening_rate', 'date_created')
-    # list_filter   = ('status', 'newsletter',)
-    fields = ('newsletter', 'collection', 'group_object', 'date_deliver_start', 'date_deliver_finished', 'utm_campaign')
-    readonly_fields = ('newsletter', 'collection', 'group_object', 'date_deliver_start', 'date_deliver_finished', 'utm_campaign')
-
-    def queryset(self, request):
-        return self.model.objects.exclude(status=1)
-
-    def has_add_permission(self, request):
-        return False
-
-    def has_delete_permission(self, request, obj=None):
-        return False
-
-    def get_graph_data(self, obj):
-        date_start = obj.date_deliver_start.replace(minute=0, second=0, microsecond=0)
-        opened_serie = []
-        for i in range(336):
-            t = date_start + datetime.timedelta(hours=i)
-            count_opened = obj.mails.exclude(viewed=None).filter(viewed__lt=t).count()
-            opened_serie.append('[%s000,%s]' % (t.strftime('%s'), count_opened))
-            if t > now():
-                break
-        return {
-            'opened_serie': ','.join(opened_serie),
-        }
-
-    def change_view(self, request, object_id, extra_context={}):
-        obj = self.get_object(request, unquote(object_id))
-        graph_data = self.get_graph_data(obj)
-        extra_context.update(graph_data)
-        return super(JobStatisticAdmin, self).change_view(request, object_id, extra_context=extra_context)
-
-    def email_list_view(self, request, object_id):
-        obj = self.get_object(request, unquote(object_id))
-        context = {
-            'object': obj,
-            'opts': self.model._meta,
-            'app_label': self.model._meta.app_label,
-        }
-
-        return render_to_response('admin/pennyblack/jobstatistic/email_list.html', context)
-
-    def user_agents_view(self, request, object_id):
-        from pennyblack.models import EmailClient
-        obj = self.get_object(request, unquote(object_id))
-        user_agents = EmailClient.objects.filter(mail__job__id=obj.id).values('user_agent').annotate(count=models.Count('user_agent')).order_by('-count')
-        context = {
-            'object': obj,
-            'opts': self.model._meta,
-            'app_label': self.model._meta.app_label,
-            'user_agents': user_agents
-        }
-
-        return render_to_response('admin/pennyblack/jobstatistic/user_agents.html', context)
-
-    def get_urls(self):
-        urls = super(JobStatisticAdmin, self).get_urls()
-        info = self.model._meta.app_label, self.model._meta.module_name
-        my_urls = patterns('',
-            url(r'^(?P<object_id>\d+)/email-list/$', self.admin_site.admin_view(self.email_list_view), name='%s_%s_email_list' % info),
-            url(r'^(?P<object_id>\d+)/user-agents/$', self.admin_site.admin_view(self.user_agents_view), name='%s_%s_user_agents' % info),
-        )
-        return my_urls + urls

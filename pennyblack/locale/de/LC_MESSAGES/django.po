@@ -5,291 +5,596 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PACKAGE VERSION\n"
+"Project-Id-Version: pennyblack DE\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2011-03-28 18:47+0200\n"
-"PO-Revision-Date: 2011-03-28 18:53+0100\n"
-"Last-Translator: Marc Egli <egli@allink.ch>\n"
-"Language-Team: LANGUAGE <LL@li.org>\n"
+"POT-Creation-Date: 2016-05-03 18:40+0600\n"
+"PO-Revision-Date: 2016-05-03 18:41+0600\n"
+"Last-Translator: Henning Hraban Ramm <hraban@fiee.net>\n"
+"Language-Team: fiëé visuëlle <hraban@fiee.net>\n"
+"Language: de\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"Plural-Forms: nplurals=2; plural=(n != 1)\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"X-Generator: Poedit 1.8.7\n"
+"X-Poedit-SourceCharset: UTF-8\n"
+
+#: __init__.py:7 __init__.py:8
+msgid "Pennyblack"
+msgstr "Pennyblack Newsletter"
 
 #: content/richtext.py:57
+msgid "Title"
+msgstr "Titel"
+
+#: content/richtext.py:70
 msgid "text only content"
-msgstr ""
+msgstr "Reiner Textinhalt"
 
-#: content/richtext.py:58
+#: content/richtext.py:71
 msgid "text only contents"
-msgstr ""
+msgstr "Reine Textinhalte"
 
-#: content/richtext.py:108
+#: content/richtext.py:126
+msgid "Image Original"
+msgstr "Originalbild"
+
+#: content/richtext.py:128
+msgid "Image Thumbnail"
+msgstr "Vorschaubild"
+
+#: content/richtext.py:132
+msgid "Image Width"
+msgstr "Bildbreite"
+
+#: content/richtext.py:135
+msgid "Image Height"
+msgstr "Bildhöhe"
+
+#: content/richtext.py:138
+msgid "Image URL"
+msgstr "Bild-URL"
+
+#: content/richtext.py:141
+msgid "Replaced Image URL"
+msgstr "Ersetzte Bild-URL"
+
+#: content/richtext.py:144
+msgid "Position"
+msgstr "Position"
+
+#: content/richtext.py:152
 msgid "text and image content"
-msgstr ""
+msgstr "Text- und Bildinhalt"
 
-#: content/richtext.py:109
+#: content/richtext.py:153
 msgid "text and image contents"
-msgstr ""
+msgstr "Text- und Bildinhalte"
 
-#: models/job.py:25
-msgid "created"
-msgstr ""
+#: management/commands/getmail.py:8
+msgid "Gets all Bounce emails"
+msgstr "Bekommt alle abgewiesenen E-Mails (Bounces)"
 
-#: models/job.py:26
-msgid "started delivering"
-msgstr ""
+#: management/commands/sendmail.py:9
+msgid "Sends all pending Newsletters"
+msgstr "Alle fälligen Newsletter versenden"
 
-#: models/job.py:27
-msgid "finished delivering"
-msgstr ""
+#: models/emailclient.py:22 models/link.py:125
+msgid "Mail message"
+msgstr "E-Mail-Nachricht"
 
-#: models/job.py:35
-msgid "utm campaign"
-msgstr ""
+#: models/emailclient.py:25
+msgid "User Agent"
+msgstr "E-Mail-Programm"
+
+#: models/emailclient.py:29
+msgid "Referer"
+msgstr "Referer"
+
+#: models/emailclient.py:32
+msgid "IP address"
+msgstr "IP-Adresse"
+
+#: models/emailclient.py:34
+msgid "Visited"
+msgstr "Besucht"
+
+#: models/emailclient.py:37
+msgid "Contact type"
+msgstr "Kontaktart"
+
+#: models/emailclient.py:41
+msgid "email client"
+msgstr "E-Mail-Programm"
+
+#: models/emailclient.py:42
+msgid "email clients"
+msgstr "E-Mail-Programme"
+
+#: models/job.py:33 models/newsletter.py:124 models/newsletter.py:269
+msgid "Newsletter"
+msgstr "Rundbrief"
+
+#: models/job.py:36
+msgid "Status"
+msgstr "Status"
 
 #: models/job.py:40
+msgid "Created"
+msgstr "Erzeugt"
+
+#: models/job.py:44
+msgid "started delivering"
+msgstr "Auslieferungsstart"
+
+#: models/job.py:48
+msgid "finished delivering"
+msgstr "Auslieferungsende"
+
+#: models/job.py:53
+msgid "Content Type"
+msgstr "Inhaltstyp"
+
+#: models/job.py:56 models/mail.py:58
+msgid "Object ID"
+msgstr "Objekt-ID"
+
+#: models/job.py:60
+msgid "Collection"
+msgstr "Sammlung"
+
+#: models/job.py:65
+msgid "utm campaign"
+msgstr "UTM-Kampagne"
+
+#: models/job.py:69
+msgid "slug"
+msgstr "Code"
+
+#: models/job.py:71
+msgid "Unique slug to allow public access to the newsletter"
+msgstr "Eindeutiger Code für den öffentlichen Zugang zum Rundbrief"
+
+#: models/job.py:76
 msgid "newsletter delivery task"
-msgstr ""
+msgstr "Auslieferungsauftrag"
 
-#: models/job.py:41
+#: models/job.py:77
 msgid "newsletter delivery tasks"
-msgstr ""
+msgstr "Auslieferungsaufträge"
 
-#: models/job.py:46
-msgid "unasigned delivery task"
-msgstr "Nicht zugeordneter Task"
+#: models/job.py:152
+msgid "# of mails sent"
+msgstr "Anzahl versandter E-Mails"
 
-#: models/job.py:55
+#: models/job.py:156
+msgid "opening rate"
+msgstr "Öffnungsrate"
+
+#: models/job.py:160
 msgid "# of mails"
 msgstr "Anzahl E-Mails"
 
-#: models/job.py:59
-msgid "# of mails sent"
-msgstr "Anzahl E-Mails versentet"
+#: models/job.py:260
+msgid "statistic"
+msgstr "Statistik"
 
-#: models/job.py:69
-msgid "# of views"
-msgstr "Anzahl geöffnet"
+#: models/job.py:261 templates/admin/pennyblack/job/send_confirmation.html:10
+msgid "statistics"
+msgstr "Statistik"
 
-#: models/job.py:79
-msgid "# of bounces"
-msgstr "Anzahl nicht zustellbar"
-
-#: models/job.py:193
+#: models/job_admin.py:64
 msgid "Newsletter has been marked for delivery."
-msgstr ""
+msgstr "Rundbrief ist zur Auslieferung vorgesehen."
 
-#: models/link.py:50
-msgid "link hash"
-msgstr ""
+#: models/link.py:63 models/mail.py:62
+msgid "Job"
+msgstr "Auftrag"
 
-#: models/link.py:51
-msgid "address"
+#: models/link.py:66
+msgid "Identifier"
+msgstr "Kennung"
+
+#: models/link.py:69
+msgid "Link hash"
+msgstr "Link hash"
+
+#: models/link.py:73
+msgid "Address"
 msgstr "Adresse"
 
-#: models/link.py:54
+#: models/link.py:75
+msgid "Token"
+msgstr "Token"
+
+#: models/link.py:79
 msgid "link"
-msgstr ""
+msgstr "Link"
 
-#: models/link.py:55
+#: models/link.py:80
 msgid "links"
-msgstr ""
+msgstr "Links"
 
-#: models/newsletter.py:65
-msgid "name"
+#: models/link.py:122
+msgid "Link"
+msgstr "Link"
+
+#: models/mail.py:46
+msgid "Viewed"
+msgstr "Angesehen"
+
+#: models/mail.py:49
+msgid "Bounced"
+msgstr "Abgewiesen"
+
+#: models/mail.py:52
+msgid "Sent"
+msgstr "Versandt"
+
+#: models/mail.py:56
+msgid "Content type"
+msgstr "Inhaltstyp"
+
+#: models/mail.py:65
+msgid "Mail hash"
+msgstr "E-Mail-Hash"
+
+#: models/mail.py:68
+msgid "Email"
+msgstr "E-Mail"
+
+#: models/newsletter.py:78 module/subscriber/models.py:134
+msgid "Name"
 msgstr "Name"
 
-#: models/newsletter.py:65
+#: models/newsletter.py:79
 msgid "Is only to describe the newsletter."
-msgstr "Wird nur zur Beschreibung verwendet."
+msgstr "Wird nur zur Beschreibung des Rundbriefs verwendet."
 
-#: models/newsletter.py:68
+#: models/newsletter.py:82 module/subscriber/models.py:66
+msgid "Active"
+msgstr "Aktiv"
+
+#: models/newsletter.py:86
 msgid "Type"
 msgstr "Art"
 
-#: models/newsletter.py:68
+#: models/newsletter.py:87
 msgid "Can only be changed during creation."
 msgstr "Kann später nicht mehr geändert werden."
 
-#: models/newsletter.py:69
-#: models/sender.py:39
+#: models/newsletter.py:90 models/sender.py:59
 msgid "sender"
 msgstr "Absender"
 
-#: models/newsletter.py:70
+#: models/newsletter.py:92
+#: templates/admin/pennyblack/job/send_confirmation.html:20
 msgid "subject"
 msgstr "Betreff"
 
-#: models/newsletter.py:71
+#: models/newsletter.py:95
 msgid "reply-to"
-msgstr ""
+msgstr "Antwortadresse"
 
-#: models/newsletter.py:72
+#: models/newsletter.py:99
 msgid "language"
 msgstr "Sprache"
 
-#: models/newsletter.py:73
+#: models/newsletter.py:103
 msgid "header image"
-msgstr ""
+msgstr "Kopfbild"
 
-#: models/newsletter.py:76
+#: models/newsletter.py:105
+msgid "Header URL"
+msgstr "Kopf-URL"
+
+#: models/newsletter.py:107
+msgid "Replaced Header URL"
+msgstr "Ersetzte Kopf-URL"
+
+#: models/newsletter.py:111
 msgid "site"
-msgstr ""
+msgstr "Website"
 
-#: models/newsletter.py:78
-msgid "Utm Source"
-msgstr ""
+#: models/newsletter.py:114
+msgid "utm Source"
+msgstr "UTM-Quelle"
 
-#: models/newsletter.py:79
-msgid "Utm Medium"
-msgstr ""
+#: models/newsletter.py:117
+msgid "utm Medium"
+msgstr "UTM-Medium"
 
-#: models/newsletter.py:85
-msgid "Newsletter"
-msgstr ""
-
-#: models/newsletter.py:86
+#: models/newsletter.py:125
 msgid "Newsletters"
-msgstr ""
+msgstr "Rundbriefe"
 
-#: models/newsletter.py:193
+#: models/newsletter.py:273
+msgid "File"
+msgstr "Datei"
+
+#: models/newsletter.py:276
+msgid "Filename"
+msgstr "Dateiname"
+
+#: models/newsletter.py:279
+msgid "MIME type"
+msgstr "MIME-Typ"
+
+#: models/newsletter.py:288
+msgid "attachment"
+msgstr "Anhang"
+
+#: models/newsletter.py:289
+msgid "attachments"
+msgstr "Anhänge"
+
+#: models/newsletter.py:304
+msgid "Mimetype of file could not be guessed."
+msgstr "Der Mimetype der Datei konnte nicht erraten werden."
+
+#: models/newsletter.py:322
+msgid "Duplicate selected newsletters"
+msgstr "Doppelt ausgewählte Rundbriefe"
+
+#: models/newsletter.py:332
 msgid "Other options"
-msgstr ""
+msgstr "Weitere Optionen"
 
-#: models/sender.py:29
+#: models/sender.py:34
 msgid "from e-mail address"
-msgstr ""
+msgstr "Absender-Adresse"
 
-#: models/sender.py:30
-#: templates/admin/pennyblack/job/send_confirmation.html:7
+#: models/sender.py:36 templates/admin/pennyblack/job/send_confirmation.html:18
 msgid "from name"
 msgstr "Absender Name"
 
-#: models/sender.py:30
+#: models/sender.py:37
 msgid "many e-mail clients show this as from."
-msgstr ""
+msgstr "Viele E-Mail-Programme zeigen dies als Absender an."
 
-#: models/sender.py:31
+#: models/sender.py:40
 msgid "imap username"
-msgstr "IMAP Benutzername"
+msgstr "IMAP-Benutzername"
 
-#: models/sender.py:32
-msgid "imap passwort"
-msgstr "IMAP Passwort"
+#: models/sender.py:43
+msgid "imap password"
+msgstr "IMAP-Passwort"
 
-#: models/sender.py:33
+#: models/sender.py:46
 msgid "imap server"
-msgstr "IMAP Server"
+msgstr "IMAP-Server"
 
-#: models/sender.py:34
+#: models/sender.py:49
 msgid "imap port"
-msgstr "IMAP Port"
+msgstr "IMAP-Port"
 
-#: models/sender.py:35
+#: models/sender.py:52
 msgid "use ssl"
 msgstr "Verwende SSL"
 
-#: models/sender.py:36
+#: models/sender.py:55
 msgid "get bounce e-mails"
-msgstr ""
+msgstr "Nimm abgewiesene E-Mails (Bounces) an."
 
-#: models/sender.py:40
+#: models/sender.py:60
 msgid "senders"
 msgstr "Absender"
+
+#: module/subscriber/__init__.py:5
+msgid "Pennyblack Subscriber"
+msgstr "Pennyblack Abonnent"
+
+#: module/subscriber/__init__.py:6
+msgid "Pennyblack Subscribers"
+msgstr "Pennyblack Abonnenten"
+
+#: module/subscriber/models.py:55
+msgid "email address"
+msgstr "E-Mail-Adresse"
+
+#: module/subscriber/models.py:59
+msgid "Groups"
+msgstr "Gruppen"
+
+#: module/subscriber/models.py:62
+msgid "Subscribe Date"
+msgstr "Abo-Datum"
+
+#: module/subscriber/models.py:73
+msgid "Subscriber"
+msgstr "Abonnent"
+
+#: module/subscriber/models.py:74
+msgid "Subscribers"
+msgstr "Abonnenten"
+
+#: module/subscriber/models.py:140
+msgid "Subscriber Group"
+msgstr "Abonnentengruppe"
+
+#: module/subscriber/models.py:141
+msgid "Subscriber Groups"
+msgstr "Abonnentengruppen"
+
+#: module/subscriber/models.py:153
+msgid "Member Count"
+msgstr "Mitgliederzahl"
 
 #: templates/admin/feincms/pennyblack/newsletter/item_editor.html:7
 msgid "preview"
 msgstr "Vorschau"
 
 #: templates/admin/feincms/pennyblack/newsletter/item_editor.html:8
-#: templates/admin/pennyblack/job/change_form.html:7
+#: templates/admin/pennyblack/jobstatistic/change_form.html:15
 #: templates/admin/pennyblack/jobunit/change_form.html:5
 msgid "History"
-msgstr ""
+msgstr "Verlauf"
 
 #: templates/admin/pennyblack/job/change_form.html:6
-#: templates/admin/pennyblack/job/statistics.html:9
-msgid "statistics"
-msgstr "Statistik"
-
-#: templates/admin/pennyblack/job/send_confirmation.html:4
-msgid "Send Newsletter"
-msgstr "Newsletter versenden"
+#: templates/admin/pennyblack/job/send_confirmation.html:28
+msgid "Save and send"
+msgstr "Speichern und abschicken"
 
 #: templates/admin/pennyblack/job/send_confirmation.html:6
+#: templates/admin/pennyblack/jobstatistic/email_list.html:5
+#: templates/admin/pennyblack/jobstatistic/user_agents.html:5
+#: templates/admin/pennyblack/jobunit/select_receiver_collection.html:5
+msgid "Home"
+msgstr "Startseite"
+
+#: templates/admin/pennyblack/job/send_confirmation.html:15
+msgid "Send Newsletter"
+msgstr "Rundbrief versenden"
+
+#: templates/admin/pennyblack/job/send_confirmation.html:17
 msgid "email count"
 msgstr "Anzahl E-Mails"
 
-#: templates/admin/pennyblack/job/send_confirmation.html:8
+#: templates/admin/pennyblack/job/send_confirmation.html:19
 msgid "from email"
 msgstr "Absender E-Mail"
 
-#: templates/admin/pennyblack/job/send_confirmation.html:9
-msgid "SPF"
-msgstr ""
+#: templates/admin/pennyblack/job/send_confirmation.html:21
+msgid "SPF result"
+msgstr "SPF-Ergebnis"
 
-#: templates/admin/pennyblack/job/statistics.html:5
-msgid "Home"
-msgstr ""
-
-#: templates/admin/pennyblack/job/statistics.html:14
+#: templates/admin/pennyblack/jobstatistic/change_form.html:28
 msgid "email statistics"
-msgstr "E-Mail Statistik"
+msgstr "E-Mail-Statistik"
 
-#: templates/admin/pennyblack/job/statistics.html:16
+#: templates/admin/pennyblack/jobstatistic/change_form.html:30
 msgid "Count"
-msgstr ""
+msgstr "Anzahl"
 
-#: templates/admin/pennyblack/job/statistics.html:16
+#: templates/admin/pennyblack/jobstatistic/change_form.html:30
 msgid "Percentage"
-msgstr ""
+msgstr "Prozentsatz"
 
-#: templates/admin/pennyblack/job/statistics.html:17
+#: templates/admin/pennyblack/jobstatistic/change_form.html:31
+msgid "Total mails"
+msgstr "Anzahl E-Mails"
+
+#: templates/admin/pennyblack/jobstatistic/change_form.html:32
 msgid "Mails sent"
-msgstr ""
+msgstr "E-Mails versandt"
 
-#: templates/admin/pennyblack/job/statistics.html:18
-msgid "Mails opened"
-msgstr ""
-
-#: templates/admin/pennyblack/job/statistics.html:19
+#: templates/admin/pennyblack/jobstatistic/change_form.html:33
 msgid "Mails bounced"
-msgstr ""
+msgstr "E-Mails abgewiesen"
 
-#: templates/admin/pennyblack/job/statistics.html:20
-msgid "Total Mails"
-msgstr ""
+#: templates/admin/pennyblack/jobstatistic/change_form.html:34
+msgid "Mails delivered"
+msgstr "E-Mails ausgeliefert"
 
-#: templates/admin/pennyblack/job/statistics.html:22
+#: templates/admin/pennyblack/jobstatistic/change_form.html:35
+msgid "Mails opened"
+msgstr "E-Mails geöffnet"
+
+#: templates/admin/pennyblack/jobstatistic/change_form.html:36
+msgid "Mails clicked"
+msgstr "E-Mails angeklickt"
+
+#: templates/admin/pennyblack/jobstatistic/change_form.html:38
 msgid "link statistics"
-msgstr "Link Statistik"
+msgstr "Link-Statistik"
+
+#: templates/admin/pennyblack/jobstatistic/change_form.html:41
+msgid "Target"
+msgstr "Ziel"
+
+#: templates/admin/pennyblack/jobstatistic/change_form.html:42
+msgid "Clicks"
+msgstr "Klicks"
+
+#: templates/admin/pennyblack/jobstatistic/change_form.html:57
+msgid "graphs"
+msgstr "Diagramme"
+
+#: templates/admin/pennyblack/jobstatistic/email_list.html:9
+#: templates/admin/pennyblack/jobstatistic/user_agents.html:9
+msgid "e-mail list"
+msgstr "E-Mail-Liste"
+
+#: templates/admin/pennyblack/jobstatistic/email_list.html:14
+msgid "receiver details"
+msgstr "Empfänger-Details"
+
+#: templates/admin/pennyblack/jobstatistic/email_list.html:17
+msgid "e-mail"
+msgstr "E-Mail"
+
+#: templates/admin/pennyblack/jobstatistic/email_list.html:18
+msgid "link clicks"
+msgstr "Link-Klicks"
+
+#: templates/admin/pennyblack/jobstatistic/email_list.html:19
+msgid "first opened"
+msgstr "zuerst geöffnet"
+
+#: templates/admin/pennyblack/jobstatistic/user_agents.html:14
+msgid "user agents"
+msgstr "E-Mail-Programme"
+
+#: templates/admin/pennyblack/jobstatistic/user_agents.html:17
+msgid "description"
+msgstr "Beschreibung"
+
+#: templates/admin/pennyblack/jobstatistic/user_agents.html:18
+msgid "count"
+msgstr "Anzahl"
 
 #: templates/admin/pennyblack/jobunit/change_form.html:6
-msgid "Newsletter Erstellen"
-msgstr ""
+msgid "Deliver Newsletter"
+msgstr "Rundbrief versenden"
 
 #: templates/admin/pennyblack/jobunit/change_form.html:7
 msgid "View on site"
-msgstr ""
+msgstr "Auf der Webseite anzeigen"
 
 #: templates/admin/pennyblack/jobunit/select_receiver_collection.html:9
+msgid "select collection"
+msgstr "Wählen Sie die Sammlung aus"
+
+#: templates/admin/pennyblack/jobunit/select_receiver_collection.html:14
+msgid "Select Receiver Collection"
+msgstr "Wählen Sie die Empfängersammlung aus"
+
+#: templates/admin/pennyblack/jobunit/select_receiver_collection.html:19
 msgid "Please correct the error below."
 msgid_plural "Please correct the errors below."
-msgstr[0] ""
-msgstr[1] ""
+msgstr[0] "Bitte korrigieren Sie den Fehler."
+msgstr[1] "Bitte korrigieren Sie die Fehler."
 
-#: templates/admin/pennyblack/jobunit/select_receiver_collection.html:36
+#: templates/admin/pennyblack/jobunit/select_receiver_collection.html:46
 msgid "Save"
-msgstr ""
+msgstr "Speichern"
 
-#: templates/pennyblack/base_newsletter.html:23
+#: templates/pennyblack/base_newsletter.html:26
 msgid "To view this email as a web page, click"
-msgstr ""
+msgstr "Um diese E-Mail auf der Homepage anzusehen, klicken Sie bitte"
 
-#: templates/pennyblack/base_newsletter.html:23
+#: templates/pennyblack/base_newsletter.html:26
 msgid "here"
-msgstr ""
+msgstr "hier"
 
-#~ msgid "From Name"
-#~ msgstr "Von Name"
+#: templates/pennyblack/subscriber/unsubscribe.html:2
+#: templates/pennyblack/subscriber/unsubscribe.html:7
+msgid "Unsubscribe"
+msgstr "Abmelden"
+
+#: templates/pennyblack/subscriber/unsubscribe.html:4
+msgid "You have been removed from the list."
+msgstr "Ihr Abonnement wurde beendet."
+
+#: templates/pennyblack/subscriber/unsubscribe.html:6
+msgid "Are you sure you want to unsubscribe this newsletter?"
+msgstr "Sind Sie sicher, dass Sie sich von diesem Rundbrief abmelden wollen?"
+
+#~ msgid "unasigned delivery task"
+#~ msgstr "Nicht zugeordneter Task"
+
+#~ msgid "# of views"
+#~ msgstr "Anzahl geöffnet"
+
+#~ msgid "# of bounces"
+#~ msgstr "Anzahl nicht zustellbar"

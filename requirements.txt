@@ -1,0 +1,6 @@
+Django
+Pillow
+FeinCMS
+pydns
+pyspf
+celery

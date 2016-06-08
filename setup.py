@@ -1,4 +1,5 @@
 #! /usr/bin/env python
+# -*- encoding: utf-8 -*-
 import os
 from setuptools import setup
 
@@ -6,11 +7,11 @@ import pennyblack
 setup(
     name='pennyblack',
     version=pennyblack.__version__,
-    description='django based newsletter toolkit',
+    description='django based newsletter toolkit (fiëé fork)',
     long_description=open(os.path.join(os.path.dirname(__file__), 'README.rst')).read(),
-    author='Marc Egli',
+    author='Marc Egli et al.',
     author_email='egli@allink.ch',
-    url='http://github.com/allink/pennyblack/',
+    url='http://github.com/fiee/pennyblack/',
     license='BSD License',
     platforms=['OS Independent'],
     packages=[
@@ -37,9 +38,10 @@ setup(
     ],
     requires=[
         'FeinCMS(>=1.3.0)',
-        'Django(>=1.3)',
-        'pydns',
-        'pyspf',
+        'Django(>=1.7)',
+        'pydns(>=2.3.4)',  # current: 2.3.6
+        'pyspf(>=2.0.5)',  # current: 2.0.11
+        'celery',
         'pil',
     ],
     include_package_data=True,
