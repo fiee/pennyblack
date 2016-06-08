@@ -38,7 +38,7 @@ setup(
     ],
     requires=[
         'FeinCMS(>=1.3.0)',
-        'Django(>=1.3)',
+        'Django(>=1.7)',
         'pydns(>=2.3.4)',  # current: 2.3.6
         'pyspf(>=2.0.5)',  # current: 2.0.11
         'celery',
