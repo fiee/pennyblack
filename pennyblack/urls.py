@@ -1,6 +1,6 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 
-urlpatterns = patterns('',
+urlpatterns = [
     url(r'^link/(?P<mail_hash>[^/]+)/(?P<link_hash>[a-z0-9]+)/$',
         'pennyblack.views.redirect_link',
         name='pennyblack.redirect_link'),
@@ -16,4 +16,4 @@ urlpatterns = patterns('',
     url(r'^ping/(?P<mail_hash>\w*)/(?P<filename>.*)$',
         'pennyblack.views.ping',
         name='pennyblack.ping'),
-)
+]
