@@ -1,8 +1,9 @@
 # coding=utf-8
+from __future__ import unicode_literals
 import mimetypes
 # import os
 
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.core.exceptions import ImproperlyConfigured
 from django.core.files.uploadedfile import InMemoryUploadedFile
 from django.contrib import admin
@@ -126,7 +127,7 @@ class Newsletter(Base):
         app_label = 'pennyblack'
 
     def __unicode__(self):
-        return u'%s %s' % (self.name, self.language)
+        return '%s %s' % (self.name, self.language)
 
     def is_valid(self):
         """
@@ -265,7 +266,8 @@ class Newsletter(Base):
 
 
 class Attachment(models.Model):
-    newsletter = models.ForeignKey(Newsletter,
+    newsletter = models.ForeignKey(
+        Newsletter,
         verbose_name=_('Newsletter'),
         related_name='attachments')
     file = models.FileField(
@@ -285,8 +287,8 @@ class Attachment(models.Model):
         return "%s (%s)" % (self.name, self.size)
 
     class Meta:
-        verbose_name = _(u'attachment')
-        verbose_name_plural = _(u'attachments')
+        verbose_name = _('attachment')
+        verbose_name_plural = _('attachments')
         app_label = 'pennyblack'
 
 
@@ -351,7 +353,7 @@ class NewsletterAdmin(item_editor.ItemEditor, admin.ModelAdmin):
 
     def get_urls(self):
         urls = super(NewsletterAdmin, self).get_urls()
-        my_urls = patterns('',
+        my_urls = [
             url(r'^(?P<newsletter_id>\d+)/preview/$', 'pennyblack.views.preview'),
-        )
+        ]
         return my_urls + urls

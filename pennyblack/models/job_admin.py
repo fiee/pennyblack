@@ -1,5 +1,5 @@
 import datetime
-from django.conf.urls import patterns, url
+from django.conf.urls import url
 from django.contrib import admin
 from django.db import models
 try:
@@ -7,7 +7,11 @@ try:
 except ImportError:
     from django.contrib.admin.util import unquote
 from django import forms
-from django.core.context_processors import csrf
+try:
+    # since Django 1.8
+    from django.template.context_processors import csrf
+except ImportError:
+    from django.core.context_processors import csrf
 from django.shortcuts import render_to_response
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
@@ -82,9 +86,11 @@ class JobAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super(JobAdmin, self).get_urls()
         info = self.model._meta.app_label, self.model._meta.model_name
-        my_urls = patterns('',
-            url(r'^(?P<object_id>\d+)/send/$', self.admin_site.admin_view(self.send_newsletter_view), name=('%s_%s_send' % info)),
-        )
+        my_urls = [
+            url(r'^(?P<object_id>\d+)/send/$',
+                self.admin_site.admin_view(self.send_newsletter_view),
+                name=('%s_%s_send' % info)),
+        ]
         return my_urls + urls
 
     def has_add_permission(self, request):
@@ -156,8 +162,12 @@ class JobStatisticAdmin(admin.ModelAdmin):
     def get_urls(self):
         urls = super(JobStatisticAdmin, self).get_urls()
         info = self.model._meta.app_label, self.model._meta.model_name
-        my_urls = patterns('',
-            url(r'^(?P<object_id>\d+)/email-list/$', self.admin_site.admin_view(self.email_list_view), name='%s_%s_email_list' % info),
-            url(r'^(?P<object_id>\d+)/user-agents/$', self.admin_site.admin_view(self.user_agents_view), name='%s_%s_user_agents' % info),
-        )
+        my_urls = [
+            url(r'^(?P<object_id>\d+)/email-list/$',
+                self.admin_site.admin_view(self.email_list_view),
+                name='%s_%s_email_list' % info),
+            url(r'^(?P<object_id>\d+)/user-agents/$',
+                self.admin_site.admin_view(self.user_agents_view),
+                name='%s_%s_user_agents' % info),
+        ]
         return my_urls + urls

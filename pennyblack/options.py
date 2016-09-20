@@ -1,5 +1,9 @@
 from django.contrib import admin
-from django.core.context_processors import csrf
+try:
+    # since Django 1.8
+    from django.template.context_processors import csrf
+except ImportError:
+    from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from django.shortcuts import get_object_or_404, render_to_response
@@ -75,21 +79,26 @@ class JobUnitAdmin(admin.ModelAdmin):
 
     def create_newsletter(self, request, object_id):
         obj = get_object_or_404(self.model, pk=object_id)
-        if len(obj.get_newsletter_receiver_collections()) == 1 and len(self.collection_selection_form_extra_fields) == 0:
+        if len(obj.get_newsletter_receiver_collections()) == 1 and len(
+        self.collection_selection_form_extra_fields) == 0:
             # there is only one collection and no options to select
             # -> call create_newsletter directly
             job = obj.create_newsletter()
-            return HttpResponseRedirect(reverse('admin:pennyblack_job_change', args=(job.id,)))
+            return HttpResponseRedirect(
+                reverse('admin:pennyblack_job_change', args=(job.id,)))
         if request.method == 'POST':
-            form = self.collection_select_form(data=request.POST,
-                                               group_object=obj,
-                                               extra_fields=self.collection_selection_form_extra_fields)
+            form = self.collection_select_form(
+                data=request.POST,
+               group_object=obj,
+               extra_fields=self.collection_selection_form_extra_fields)
             if form.is_valid():
                 job = obj.create_newsletter(form_data=form.cleaned_data)
-                return HttpResponseRedirect(reverse('admin:pennyblack_job_change', args=(job.id,)))
+                return HttpResponseRedirect(
+                    reverse('admin:pennyblack_job_change', args=(job.id,)))
         else:
-            form = self.collection_select_form(group_object=obj,
-                                               extra_fields=self.collection_selection_form_extra_fields)
+            form = self.collection_select_form(
+                group_object=obj,
+                extra_fields=self.collection_selection_form_extra_fields)
         info = self.model._meta.app_label, self.model._meta.model_name
         context = {
             'opts': self.model._meta,
@@ -98,13 +107,16 @@ class JobUnitAdmin(admin.ModelAdmin):
             'form_url': reverse('admin:%s_%s_create_newsletter' % info, args=(obj.id,))
         }
         context.update(csrf(request))
-        return render_to_response('admin/pennyblack/jobunit/select_receiver_collection.html', context)
+        return render_to_response(
+            'admin/pennyblack/jobunit/select_receiver_collection.html', context)
 
     def get_urls(self):
-        from django.conf.urls import patterns, url
+        from django.conf.urls import url
         urls = super(JobUnitAdmin, self).get_urls()
         info = self.model._meta.app_label, self.model._meta.model_name
-        my_urls = patterns('',
-            url(r'^(?P<object_id>\d+)/create_newsletter/$', self.admin_site.admin_view(self.create_newsletter), name='%s_%s_create_newsletter' % info),
-        )
+        my_urls = [
+            url(r'^(?P<object_id>\d+)/create_newsletter/$',
+                self.admin_site.admin_view(self.create_newsletter),
+                name='%s_%s_create_newsletter' % info),
+        ]
         return my_urls + urls
