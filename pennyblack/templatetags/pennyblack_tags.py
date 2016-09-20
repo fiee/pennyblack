@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import hashlib
 
 from django import template
@@ -29,7 +30,8 @@ def newsletterstyle(parser, token):
     """
     bits = list(token.split_contents())
     if len(bits) != 3:
-        raise template.TemplateSyntaxError("%r expected format is 'newsletterstyle request stylename'" % bits[0])
+        raise template.TemplateSyntaxError(
+            "%r expected format is 'newsletterstyle request stylename'" % bits[0])
     request = bits[1]
     key = parser.compile_filter(bits[2])
     style = parser.parse(('endnewsletterstyle',))
@@ -58,7 +60,8 @@ def get_newsletterstyle(parser, token):
     """
     bits = list(token.split_contents())
     if len(bits) != 3:
-        raise template.TemplateSyntaxError("%r expected format is 'newsletterstyle request stylename'" % bits[0])
+        raise template.TemplateSyntaxError(
+            "%r expected format is 'newsletterstyle request stylename'" % bits[0])
     request = bits[1]
     key = parser.compile_filter(bits[2])
     return NewsletterGetStyleNode(key, request)
@@ -81,7 +84,10 @@ class NewsletterHeaderImageNode(template.Node):
         else:
             mail = context['mail']
             header_url = mail.get_header_url()
-            header_image = newsletter.get_base_url() + reverse('pennyblack.ping', kwargs={'mail_hash': mail.mail_hash, 'filename': newsletter.header_image})
+            header_image = newsletter.get_base_url() + reverse(
+                'pennyblack.ping',
+                kwargs={'mail_hash': mail.mail_hash,
+                        'filename': newsletter.header_image})
         return """<a href="%s" target="_blank"><img src="%s" border="0" %s/></a>""" % (header_url, header_image, ' '.join(self.extra_args))
 
 
@@ -112,7 +118,7 @@ class NewsletterLinkUrlNode(template.Node):
     def render(self, context):
         from pennyblack.models import Newsletter
         if 'mail' not in context:
-            return u'#'
+            return '#'
         mail = context['mail']
         newsletter = mail.job.newsletter
         if newsletter.is_workflow():
@@ -123,7 +129,8 @@ class NewsletterLinkUrlNode(template.Node):
             link = job.links.get(identifier=self.identifier)
         except job.links.model.DoesNotExist:
             link = Newsletter.add_view_link_to_job(self.identifier, job)
-        return context['base_url'] + reverse('pennyblack.redirect_link', args=(mail.mail_hash, link.link_hash))
+        return context['base_url'] + reverse(
+            'pennyblack.redirect_link', args=(mail.mail_hash, link.link_hash))
 
 
 @register.tag
@@ -133,7 +140,8 @@ def link_url(parser, token):
     """
     bits = list(token.split_contents())
     if len(bits) != 2:
-        raise template.TemplateSyntaxError("%r expected format is 'link_url url_identifier'" % bits[0])
+        raise template.TemplateSyntaxError(
+            "%r expected format is 'link_url url_identifier'" % bits[0])
     return NewsletterLinkUrlNode(identifier=bits[1])
 
 
@@ -177,7 +185,8 @@ class LinkTagNode(template.Node):
         if created:
             link.link_target = target
             link.save()
-        return context['base_url'] + reverse('pennyblack.redirect_link', args=(mail.mail_hash, link.link_hash))
+        return context['base_url'] + reverse(
+            'pennyblack.redirect_link', args=(mail.mail_hash, link.link_hash))
 
 
 @register.tag
@@ -197,7 +206,8 @@ def trackable_link(parser, token):
     """
     bits = list(token.split_contents())
     if not 2 <= len(bits) <= 3:
-        raise template.TemplateSyntaxError("%r expected format is 'tackable_link 'http://target_url''" % bits[0])
+        raise template.TemplateSyntaxError(
+            "%r expected format is 'tackable_link 'http://target_url''" % bits[0])
     if len(bits) == 2:
         template_loader, (position_start, position_end) = parser.command_stack[0][-1]
         link_token = hashlib.md5("%s%s" % (template_loader.loadname, position_start)).hexdigest()

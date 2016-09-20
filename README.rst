@@ -14,7 +14,7 @@ in the admin menu. Sending bulk e-mails is easy on memory. 20’000 and more
 addresses wont crash your server. From the outset we developed Pennyblack to
 easily integrate into existing web projects.
 
-This is the fork by fiëé visuëlle, intended to work with latest Django (1.9)
+This is the fork by fiëé visuëlle, intended to work with latest Django (1.9+)
 and FeinCMS (1.11+). Based on the Django 1.7 branch of nickburlett’s fork.
 
 

@@ -156,7 +156,8 @@ class TextOnlyNewsletterContent(RichTextContent):
         """
         insert link_style into all a tags
         """
-        self.text = re.sub(r"<a ",
+        self.text = re.sub(
+            r"<a ",
             "<a style=\"{% get_newsletterstyle request link_style %}\"",
             self.text)
         if save:

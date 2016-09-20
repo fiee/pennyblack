@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 import hashlib
 import random
 from rfc822 import dump_address_pair
@@ -35,7 +36,8 @@ class MailManager(models.Manager):
     use_for_related_fields = True
 
     def most_clicked_first(self):
-        return self.annotate(click_count=models.Count('clicks')).order_by('-click_count')
+        return self.annotate(
+            click_count=models.Count('clicks')).order_by('-click_count')
 
 
 class Mail(models.Model):
@@ -80,11 +82,12 @@ class Mail(models.Model):
         self.extra_attachments = []
 
     def __unicode__(self):
-        return u'%s to %s' % (self.job, self.person,)
+        return '%s to %s' % (self.job, self.person,)
 
     def save(self, **kwargs):
-        if self.mail_hash == u'':
-            self.mail_hash = hashlib.md5(str(self.id) + str(random.random())).hexdigest()
+        if self.mail_hash == '':
+            self.mail_hash = hashlib.md5(
+                str(self.id) + str(random.random())).hexdigest()
         super(Mail, self).save(**kwargs)
 
     def mark_sent(self):
@@ -171,7 +174,7 @@ class Mail(models.Model):
         if job.newsletter.newsletter_type == settings.NEWSLETTER_TYPE_MASSMAIL:
             headers.update({'Precedence': 'bulk'})
         try:
-            headers.update({'List-Unsubscribe': "<%s>" % \
+            headers.update({'List-Unsubscribe': "<%s>" %
                 self.person.get_unsubscribe_url(
                     mail=self, job=job, newsletter=job.newsletter)})
         except NotImplementedError:
@@ -179,12 +182,14 @@ class Mail(models.Model):
         message = mail.EmailMessage(
             job.newsletter.subject,
             self.get_content(),
-            dump_address_pair((job.newsletter.sender.name, job.newsletter.sender.email)),
+            dump_address_pair((
+                job.newsletter.sender.name, job.newsletter.sender.email)),
             [self.email],
             headers=headers,
         )
         for attachment in job.newsletter.attachments.all():
-            message.attachments.append((attachment.name, attachment.file.read(), attachment.mimetype))
+            message.attachments.append((
+                attachment.name, attachment.file.read(), attachment.mimetype))
         for attachment in self.extra_attachments:
             message.attachments.append(attachment)
         message.content_subtype = "html"
@@ -231,7 +236,7 @@ class Mail(models.Model):
         if hasattr(self, '_admin_change_url'):
             return self._admin_change_url
         try:
-            self._admin_change_url = reverse('admin:%s_%s_change' % \
+            self._admin_change_url = reverse('admin:%s_%s_change' %
                 (self.content_type.app_label, self.content_type.model),
                 args=[self.object_id])
         except NoReverseMatch:

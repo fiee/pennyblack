@@ -59,7 +59,8 @@ class Link(models.Model):
     If there is a identifier set, then the link belongs to a view which is presented
     to the receiver via the proxy view. These links don't have a link_target.
     """
-    job = models.ForeignKey('pennyblack.Job',
+    job = models.ForeignKey(
+        'pennyblack.Job',
         verbose_name=_('Job'),
         related_name='links')
     identifier = models.CharField(
@@ -110,7 +111,8 @@ class Link(models.Model):
 
     def save(self, **kwargs):
         if self.link_hash == u'':
-            self.link_hash = hashlib.md5(str(self.id) + str(random.random())).hexdigest()
+            self.link_hash = hashlib.md5(
+                str(self.id) + str(random.random())).hexdigest()
         super(Link, self).save(**kwargs)
 
 
@@ -118,10 +120,12 @@ class LinkClick(models.Model):
     """
     Stores a click on a link.
     """
-    link = models.ForeignKey('pennyblack.Link',
+    link = models.ForeignKey(
+        'pennyblack.Link',
         verbose_name=_('Link'),
         related_name='clicks')
-    mail = models.ForeignKey('pennyblack.Mail',
+    mail = models.ForeignKey(
+        'pennyblack.Mail',
         verbose_name=_('Mail message'),
         related_name='clicks')
     date = models.DateTimeField(default=now)

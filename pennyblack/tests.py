@@ -41,23 +41,32 @@ class RichtextContentTest(unittest.TestCase):
 
     def setUp(self):
         try:
-            self.ContentCls = getattr(Newsletter, 
-                    '%s_set' % TextOnlyNewsletterContent.__name__.lower() ).related.related_model
+            self.ContentCls = getattr(
+                Newsletter,
+                '%s_set' % TextOnlyNewsletterContent.__name__.lower()
+                ).related.related_model
         except AttributeError:
             self.ContentCls = Newsletter.create_content_type(
                 TextOnlyNewsletterContent, regions=('notexists',) )
         self.content = self.ContentCls(text='<a href="http://www.test.com">link</a>')
-        self.link = reverse('pennyblack.redirect_link', kwargs={'mail_hash': '{{mail.mail_hash}}', 'link_hash': '1234'}).replace('%7B', '{').replace('%7D', '}')
+        self.link = reverse(
+            'pennyblack.redirect_link',
+            kwargs={'mail_hash': '{{mail.mail_hash}}',
+                    'link_hash': '1234'}).replace('%7B', '{').replace('%7D', '}')
         self.job = self.Job(self.link)
 
     def test_replace_links(self):
         self.content.replace_links(self.job)
-        self.assertEqual(self.content.text, '<a href="{{base_url}}%s">link</a>' % self.link)
+        self.assertEqual(
+            self.content.text,
+            '<a href="{{base_url}}%s">link</a>' % self.link)
 
     def test_replace_multiple_links(self):
         self.content.text = '<a href="http://www.testmultiple.com">link</a><a href="http://www.2ndlink.com">2ndlink</a>'
         self.content.replace_links(self.job)
-        self.assertEqual(self.content.text, '<a href="{{base_url}}%s">link</a><a href="{{base_url}}%s">2ndlink</a>' % (self.link, self.link))
+        self.assertEqual(
+            self.content.text,
+            '<a href="{{base_url}}%s">link</a><a href="{{base_url}}%s">2ndlink</a>' % (self.link, self.link))
 
     def test_dont_replace_twice(self):
         self.content.text = '<a href="http://www.allink.ch">link</a>'

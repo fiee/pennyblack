@@ -77,17 +77,13 @@ class Job(models.Model):
         app_label = 'pennyblack'
 
     def __unicode__(self):
-        return (self.newsletter.subject
-            if self.newsletter is not None else "unasigned delivery task")
+        return (
+            self.newsletter.subject
+            if self.newsletter is not None
+            else "unassigned delivery task")
 
     def clean(self, *args, **kwargs):
-        self.public_slug = self.public_slug.strip() 
-        if self.public_slug == "":
-            self.public_slug = None
-        super(Job, self).clean(*args, **kwargs)
-
-    def clean(self, *args, **kwargs):
-        self.public_slug = self.public_slug.strip() 
+        self.public_slug = self.public_slug.strip()
         if self.public_slug == "":
             self.public_slug = None
         super(Job, self).clean(*args, **kwargs)
@@ -122,8 +118,9 @@ class Job(models.Model):
     def percentage_mails_sent(self):
         if self.count_mails_total == 0:
             return 0
-        return round(float(self.count_mails_sent) \
-            / float(self.count_mails_total) * 100, 1)
+        return round(
+            float(self.count_mails_sent) /
+            float(self.count_mails_total) * 100, 1)
 
     @property
     def count_mails_viewed(self):
@@ -137,8 +134,9 @@ class Job(models.Model):
     def percentage_mails_viewed(self):
         if self.count_mails_delivered == 0:
             return 0
-        return round(float(self.count_mails_viewed) \
-            / self.count_mails_delivered * 100, 1)
+        return round(
+            float(self.count_mails_viewed) /
+            self.count_mails_delivered * 100, 1)
 
     @property
     def count_mails_bounced(self):
@@ -152,15 +150,17 @@ class Job(models.Model):
     def percentage_mails_clicked(self):
         if self.count_mails_delivered == 0:
             return 0
-        return round(float(self.count_mails_clicked) \
-            / float(self.count_mails_delivered) * 100, 1)
+        return round(
+            float(self.count_mails_clicked) /
+            float(self.count_mails_delivered) * 100, 1)
 
     @property
     def percentage_mails_bounced(self):
         if self.count_mails_sent == 0:
             return 0
-        return round(float(self.count_mails_bounced) \
-            / float(self.count_mails_sent) * 100, 1)
+        return round(
+            float(self.count_mails_bounced) /
+            float(self.count_mails_sent) * 100, 1)
 
     # fields
     def field_mails_sent(self):
