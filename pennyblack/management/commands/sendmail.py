@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from django.utils.translation import ugettext_lazy as _
 from django.core.management.base import BaseCommand
 from pennyblack.models import Job
@@ -12,4 +13,4 @@ class Command(BaseCommand):
         pending_jobs = Job.objects.filter(status__in=settings.JOB_STATUS_PENDING)
         for job in pending_jobs:
             job.send()
-            print u"%s sent" % job
+            self.stdout.write("%s sent" % job)
