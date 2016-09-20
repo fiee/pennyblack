@@ -2,7 +2,7 @@
 from __future__ import unicode_literals
 from django.utils.translation import ugettext_lazy as _
 
-VERSION = (0, 4, 2, 'fiee')
+VERSION = (0, 4, 3, 'fiee')
 __version__ = '.'.join(map(str, VERSION))
 verbose_name = _('Pennyblack')
 verbose_name_plural = _('Pennyblack')

@@ -1,6 +1,6 @@
-Django
+Django # >= 1.9
 Pillow
-FeinCMS
+FeinCMS # >1.12
 pydns
 pyspf
 celery
