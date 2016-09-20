@@ -1,4 +1,5 @@
 # coding=utf-8
+from __future__ import absolute_import
 from __future__ import unicode_literals
 import mimetypes
 # import os
@@ -352,8 +353,11 @@ class NewsletterAdmin(item_editor.ItemEditor, admin.ModelAdmin):
         return self.model.objects.active()
 
     def get_urls(self):
+        from pennyblack.views import preview
+        # url doesn’t take function or class names any more
+        # but we can’t import views at top, because views imports models
         urls = super(NewsletterAdmin, self).get_urls()
         my_urls = [
-            url(r'^(?P<newsletter_id>\d+)/preview/$', 'pennyblack.views.preview'),
+            url(r'^(?P<newsletter_id>\d+)/preview/$', preview),
         ]
         return my_urls + urls

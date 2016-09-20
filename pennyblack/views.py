@@ -1,3 +1,5 @@
+from __future__ import absolute_import
+from __future__ import unicode_literals
 import types
 from urlparse import urlparse, urlunparse, parse_qs
 from urllib import urlencode

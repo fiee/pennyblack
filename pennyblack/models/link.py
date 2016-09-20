@@ -1,3 +1,4 @@
+from __future__ import unicode_literals
 from django.contrib import admin
 from django.core.urlresolvers import resolve
 from django.db import models
@@ -110,7 +111,7 @@ class Link(models.Model):
         return template.render(Context(mail.get_context()))
 
     def save(self, **kwargs):
-        if self.link_hash == u'':
+        if self.link_hash == '':
             self.link_hash = hashlib.md5(
                 str(self.id) + str(random.random())).hexdigest()
         super(Link, self).save(**kwargs)
