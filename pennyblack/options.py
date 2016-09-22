@@ -6,7 +6,7 @@ except ImportError:
     from django.core.context_processors import csrf
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
-from django.shortcuts import get_object_or_404, render_to_response
+from django.shortcuts import get_object_or_404, render
 
 from pennyblack.forms import CollectionSelectForm
 
@@ -107,8 +107,10 @@ class JobUnitAdmin(admin.ModelAdmin):
             'form_url': reverse('admin:%s_%s_create_newsletter' % info, args=(obj.id,))
         }
         context.update(csrf(request))
-        return render_to_response(
-            'admin/pennyblack/jobunit/select_receiver_collection.html', context)
+        return render(
+            request,
+            'admin/pennyblack/jobunit/select_receiver_collection.html',
+            context)
 
     def get_urls(self):
         from django.conf.urls import url

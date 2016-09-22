@@ -12,7 +12,7 @@ try:
     from django.template.context_processors import csrf
 except ImportError:
     from django.core.context_processors import csrf
-from django.shortcuts import render_to_response
+from django.shortcuts import render
 from django.utils.translation import ugettext_lazy as _
 from django.http import HttpResponseRedirect
 from django.core.urlresolvers import reverse
@@ -79,8 +79,7 @@ class JobAdmin(admin.ModelAdmin):
                 'app_label': self.model._meta.app_label,
             }
             context.update(csrf(request))
-            return render_to_response(
-                'admin/pennyblack/job/send_confirmation.html', context)
+            return render(request, 'admin/pennyblack/job/send_confirmation.html', context)
         return super(JobAdmin, self).response_change(request, obj)
 
     def get_urls(self):
@@ -143,8 +142,7 @@ class JobStatisticAdmin(admin.ModelAdmin):
             'opts': self.model._meta,
             'app_label': self.model._meta.app_label,
         }
-
-        return render_to_response('admin/pennyblack/jobstatistic/email_list.html', context)
+        return render(request, 'admin/pennyblack/jobstatistic/email_list.html', context)
 
     def user_agents_view(self, request, object_id):
         from pennyblack.models import EmailClient
@@ -156,8 +154,7 @@ class JobStatisticAdmin(admin.ModelAdmin):
             'app_label': self.model._meta.app_label,
             'user_agents': user_agents
         }
-
-        return render_to_response('admin/pennyblack/jobstatistic/user_agents.html', context)
+        return render(request, 'admin/pennyblack/jobstatistic/user_agents.html', context)
 
     def get_urls(self):
         urls = super(JobStatisticAdmin, self).get_urls()
