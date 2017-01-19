@@ -23,11 +23,11 @@ class EmailClient(models.Model):
         related_name='clients')
     user_agent = models.CharField(
         verbose_name=_('User Agent'),
-        max_length=255,
+        max_length=1024,
         db_index=True)
     referer = models.CharField(
         verbose_name=_('Referer'),
-        max_length=1023, blank=True)
+        max_length=2048, blank=True)
     ip_address = models.GenericIPAddressField(
         verbose_name=_('IP address'))
     visited = models.DateTimeField(

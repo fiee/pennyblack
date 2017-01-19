@@ -179,7 +179,7 @@ class LinkTagNode(template.Node):
             self.token = self.token.resolve(context)
         target = self.target.resolve(context)
         if 'mail' not in context:
-            return "%s %s " % (target, self.token)
+            return "%s" % (target,)
         mail = context['mail']
         link, created = Link.objects.get_or_create(token=self.token, job=mail.job)
         if created:
@@ -209,8 +209,7 @@ def trackable_link(parser, token):
         raise template.TemplateSyntaxError(
             "%r expected format is 'tackable_link 'http://target_url''" % bits[0])
     if len(bits) == 2:
-        template_loader, (position_start, position_end) = parser.command_stack[0][-1]
-        link_token = hashlib.md5("%s%s" % (template_loader.loadname, position_start)).hexdigest()
+        link_token = hashlib.md5("%d%s" % (token.lineno, parser.tokens[0].contents)).hexdigest()
     else:
         link_token = template.Variable(bits[2])
     return LinkTagNode(template.Variable(bits[1]), link_token)

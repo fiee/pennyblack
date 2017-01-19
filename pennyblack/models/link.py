@@ -110,6 +110,18 @@ class Link(models.Model):
         template = Template(self.link_target)
         return template.render(Context(mail.get_context()))
 
+    def get_target_for_job(self, job):
+        """
+        gets the link target by evaluating the string using the email content
+        """
+        from pennyblack.models import Newsletter, Mail
+        if self.identifier != '':
+            return Newsletter.get_view_link(self.identifier)
+        template = Template(self.link_target)
+        # make a fake mail context, since there's no actual mail here
+        mail = Mail(job=job)
+        return template.render(Context(mail.get_context()))
+
     def save(self, **kwargs):
         if self.link_hash == '':
             self.link_hash = hashlib.md5(

@@ -127,6 +127,35 @@ def redirect_link(request, mail, link):
         pass
     return response
 
+@needs_link
+def redirect_link_public_job(request, link):
+    """
+    Redirects to the link target and marks this mail as read. If the link
+    belongs to a proxy view it redirects it to the proxy view url.
+    """
+    job = link.job
+    target = link.get_target_for_job(job)
+    if isinstance(target, types.FunctionType):
+        return HttpResponseRedirect('/')
+    # disassemble the url
+    scheme, netloc, path, params, query, fragment = tuple(urlparse(target))
+    if scheme in ('http', 'https'):  # insert ga tracking if scheme is appropriate
+        parsed_query = parse_qs(query)
+        if job.newsletter.utm_source:
+            parsed_query['utm_source'] = job.newsletter.utm_source
+        if job.newsletter.utm_medium:
+            parsed_query['utm_medium'] = job.newsletter.utm_medium
+        if job.utm_campaign:
+            parsed_query['utm_campaign'] = job.utm_campaign
+        query = urlencode(parsed_query, True)
+    # reassemble the url
+    target = urlunparse((scheme, netloc, path, params, query, fragment))
+    response = HttpResponseRedirectWithMailto(target)
+    try:
+        response.allowed_schemes = response.allowed_schemes + ['mailto']
+    except AttributeError:
+        pass
+    return response
 
 @needs_mail
 def ping(request, mail, filename):

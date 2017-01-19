@@ -210,7 +210,7 @@ class Mail(models.Model):
         request = HttpRequest()
         request.content_context = context
         return render_to_string(newsletter.template.path, context,
-                                context_instance=RequestContext(request))
+                                context=RequestContext(request))
 
     def get_context(self):
         """
