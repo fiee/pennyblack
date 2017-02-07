@@ -45,11 +45,14 @@ class RichTextContentAdminForm(ItemEditorForm):
     )
 
     def clean(self):
+        """
+        TODO: Tidy was included in old releases of FeinCMS
+        """
         cleaned_data = super(RichTextContentAdminForm, self).clean()
 
-        if settings.FEINCMS_TIDY_HTML:
+        if settings.TIDY_HTML:
             text, errors, warnings = get_object(
-                settings.FEINCMS_TIDY_FUNCTION)(cleaned_data['text'])
+                settings.TIDY_FUNCTION)(cleaned_data['text'])
 
             # Ick, but we need to be able to update text and seen_tidy_warnings
             self.data = self.data.copy()
@@ -58,15 +61,15 @@ class RichTextContentAdminForm(ItemEditorForm):
             cleaned_data['text'] = text
             self.data['%s-text' % self.prefix] = text
 
-            if settings.FEINCMS_TIDY_SHOW_WARNINGS and (errors or warnings):
-                if settings.FEINCMS_TIDY_ALLOW_WARNINGS_OVERRIDE:
+            if settings.TIDY_SHOW_WARNINGS and (errors or warnings):
+                if settings.TIDY_ALLOW_WARNINGS_OVERRIDE:
                     # Convert the ignore input from hidden to Checkbox so the
                     # user can change it:
                     self.fields['seen_tidy_warnings'].widget =\
                         forms.CheckboxInput()
 
                 if errors or not (
-                        settings.FEINCMS_TIDY_ALLOW_WARNINGS_OVERRIDE and
+                        settings.TIDY_ALLOW_WARNINGS_OVERRIDE and
                         cleaned_data['seen_tidy_warnings']):
                     self._errors["text"] = self.error_class([mark_safe(
                         _(
@@ -85,7 +88,7 @@ class RichTextContentAdminForm(ItemEditorForm):
                 # errors we'll set our hidden form field to allow the user to
                 # ignore warnings on the next submit:
                 if (not errors and
-                        settings.FEINCMS_TIDY_ALLOW_WARNINGS_OVERRIDE):
+                        settings.TIDY_ALLOW_WARNINGS_OVERRIDE):
                     self.data["%s-seen_tidy_warnings" % self.prefix] = True
 
         return cleaned_data

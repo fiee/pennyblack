@@ -40,3 +40,14 @@ SUBSCRIBER_BOUNCES_UNTIL_DEACTIVATION = getattr(settings, 'SUBSCRIBER_BOUNCES_UN
 
 
 ENABLE_SPF = False
+
+# these were FEINCMS settings previously
+# FeinCMS doesn’t include HTML Tidy any more since v1.12
+# use Tidy?
+TIDY_HTML = getattr(settings, 'PENNYBLACK_TIDY_HTML', False)
+# Tidy’s cleanup function, must take cleaned text and return text, errors, warnings
+TIDY_FUNCTION = getattr(settings, 'PENNYBLACK_TIDY_FUNCTION', None)
+# Show warnings to the (admin) user?
+TIDY_SHOW_WARNINGS = getattr(settings, 'PENNYBLACK_TIDY_SHOW_WARNINGS', False)
+# Let user override warnings?
+TIDY_ALLOW_WARNINGS_OVERRIDE = getattr(settings, 'PENNYBLACK_TIDY_ALLOW_WARNINGS_OVERRIDE', False)
