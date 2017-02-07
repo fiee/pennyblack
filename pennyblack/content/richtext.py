@@ -22,7 +22,10 @@ from feincms.utils import get_object
 
 import re
 import os
-from PIL import Image
+try:
+    import Image
+except:
+    from PIL import Image
 import exceptions
 
 HREF_RE = re.compile(r'href\="((\{\{[^}]+\}\}|[^"><])+)"')
