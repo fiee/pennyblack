@@ -1,3 +1,4 @@
+# coding: utf-8
 from django.conf import settings
 
 TINYMCE_CONFIG_URL = getattr(settings, 'PENNYBLACK_TINYMCE_CONFIG_URL', 'admin/pennyblack/tiny_mce/init.html')
