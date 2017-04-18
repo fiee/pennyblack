@@ -10,7 +10,7 @@ You can also install pennyblack using pip like so::
 
 Or you can grab your own copy of the pennyblack source from github::
 
-    $ git clone git://github.com/allink/pennyblack.git
+    $ git clone git://github.com/fiee/pennyblack.git
 
 Some features like spf detection need pyspf and pydns installations.
 
